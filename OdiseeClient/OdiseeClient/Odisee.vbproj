@@ -31,12 +31,12 @@
     <SupportUrl>http://support.odisee.de/</SupportUrl>
     <ErrorReportUrl>http://support.odisee.de/</ErrorReportUrl>
     <ProductName>Odisee Client</ProductName>
-    <PublisherName>art of coding UG %28haftungsbeschränkt%29</PublisherName>
+    <PublisherName>art of coding UG</PublisherName>
     <SuiteName>Odisee</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>index.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>9</ApplicationRevision>
+    <ApplicationRevision>10</ApplicationRevision>
     <ApplicationVersion>2.2.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
