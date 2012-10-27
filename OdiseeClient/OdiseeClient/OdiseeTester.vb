@@ -218,12 +218,17 @@ Public Class OdiseeTester
                     Dim filename As String = "OdiseeClientTest.pdf"
                     Dim fullPath As String = savePathTextBox.Text & "\" & filename
                     Helper.HttpPost.saveDocument(odiseeClient.xmlDoc, webResponse, fullPath)
-                    MsgBox("Saved " & webResponse.ContentLength & " bytes to " & fullPath)
+                    Try
+                        Dim process As Process = System.Diagnostics.Process.Start(fullPath)
+                        'process.WaitForExit()
+                    Catch ex As Exception
+                        MsgBox("Saved " & webResponse.ContentLength & " bytes to " & fullPath)
+                    End Try
                 Else
                     MsgBox("Sorry, got no result")
                 End If
             Else
-                MsgBox("Sorry, got no valid response")
+                MsgBox("Sorry, got invalid response")
             End If
         Catch ex As Exception
             logTextBox.AppendText(ex.ToString())
