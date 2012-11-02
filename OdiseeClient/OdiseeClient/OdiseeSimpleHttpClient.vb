@@ -398,7 +398,7 @@ Namespace Http
             ' Set template
             setLatestTemplate(actualRequest, template, outputFormat)
             ' Archiving
-            setArchive(False, False)
+            setArchive(False, True)
             ' <instructions>
             Dim instructionsElement As XmlElement = __xmlDoc.CreateElement("instructions")
             actualRequest.AppendChild(instructionsElement)
