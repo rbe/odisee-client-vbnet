@@ -301,37 +301,40 @@ Public Class OdiseeTester
         Else
             ' Save user input
             saveUserSettings()
-        ' Clear log textbox
-        logTextBox.Clear()
-        Try
-            ' Create Odisee client through factory using a service URL and username/password for HTTP BASIC authentication
-            odiseeClient = OdiseeSimpleHttpClient.createClient(odiseeGenerateDocumentURI, username, password)
-            ' Create a first request for a certain template
-            Dim request1 As XmlElement = odiseeClient.createRequest(template)
-            ' Parse XML from textbox
-            odiseeClient.xmlDoc.LoadXml(odiseeRequestXMLTextBox.Text)
-            ' Process reponse: save document to disk
-            Dim webResponse As WebResponse = odiseeClient.process()
-            If Not IsNothing(webResponse) Then
-                If webResponse.ContentLength > 0 Then
+            ' Clear log textbox
+            logTextBox.Clear()
+            Try
+                ' Create Odisee client through factory using a service URL and username/password for HTTP BASIC authentication
+                odiseeClient = OdiseeSimpleHttpClient.createClient(odiseeGenerateDocumentURI, username, password)
+                ' Create a first request for a certain template
+                Dim request1 As XmlElement = odiseeClient.createRequest(template)
+                ' Parse XML from textbox
+                odiseeClient.xmlDoc.LoadXml(odiseeRequestXMLTextBox.Text)
+                ' Process reponse: save document to disk
+                Dim webResponse As HttpWebResponse = odiseeClient.process()
+                If Not IsNothing(webResponse) Then
+                    If webResponse.ContentLength > 0 Then
                         Dim fullPath As String = savePathTextBox.Text & "\" & saveFilename
-                    Helper.HttpPost.saveDocument(odiseeClient.xmlDoc, webResponse, fullPath)
-                    Try
-                        Dim process As Process = System.Diagnostics.Process.Start(fullPath)
-                        'process.WaitForExit()
-                    Catch ex As Exception
-                        MsgBox("Saved " & webResponse.ContentLength & " bytes to " & fullPath)
-                    End Try
+                        Helper.HttpPost.saveDocument(odiseeClient.xmlDoc, webResponse, fullPath)
+                        Try
+                            Dim process As Process = System.Diagnostics.Process.Start(fullPath)
+                            'process.WaitForExit()
+                        Catch ex As Exception
+                            MsgBox("Saved " & webResponse.ContentLength & " bytes to " & fullPath)
+                        End Try
+                    Else
+                        MsgBox("Sorry, got no result")
+                    End If
                 Else
-                    MsgBox("Sorry, got no result")
+                    MsgBox("Sorry, got invalid response")
                 End If
-            Else
-                MsgBox("Sorry, got invalid response")
-            End If
-        Catch ex As Exception
-            logTextBox.AppendText(ex.ToString())
-            logTextBox.ScrollToCaret()
-        End Try
+                '
+                webResponse.Close()
+            Catch ex As Exception
+                logTextBox.AppendText(ex.ToString())
+                logTextBox.ScrollToCaret()
+            End Try
+        End If
     End Sub
 
 #End Region
