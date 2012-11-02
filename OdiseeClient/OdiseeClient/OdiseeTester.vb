@@ -21,7 +21,37 @@ Public Class OdiseeTester
 
 #Region "Properties"
 
+    ''' <summary>
+    ''' Path for generated file.
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Private Property savePath As String
+        Set(value As String)
+            savePathTextBox.Text = value
+            My.Settings.odiseeOutputDirectory = value
+        End Set
+        Get
+            Return savePathTextBox.Text
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Name for generated file.
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Property saveFilename As String
+        Set(value As String)
+            saveFilenameTextBox.Text = value
+            My.Settings.odiseeOutputFilename = value
+        End Set
+        Get
+            Return saveFilenameTextBox.Text
+        End Get
+    End Property
 
     ''' <summary>
     ''' The "simple HTTP POST" Odisee client.
@@ -31,6 +61,16 @@ Public Class OdiseeTester
     ''' <remarks></remarks>
     Private Property odiseeClient As OdiseeSimpleHttpClient
 
+    Property odiseeServer As String
+        Set(value As String)
+            odiseeServerURLTextBox.Text = value
+            My.Settings.odiseeServer = value
+        End Set
+        Get
+            Return odiseeServerURLTextBox.Text
+        End Get
+    End Property
+
     ''' <summary>
     ''' Generate the Odisee service URL from UI/user input.
     ''' </summary>
@@ -39,7 +79,7 @@ Public Class OdiseeTester
     ''' <remarks></remarks>
     ReadOnly Property odiseeServiceURL As String
         Get
-            Return protocolCombobox.Text & "://" & odiseeServerURL.Text & "/odisee"
+            Return protocolCombobox.Text & "://" & odiseeServer & "/odisee"
         End Get
     End Property
 
@@ -51,7 +91,7 @@ Public Class OdiseeTester
     ''' <remarks></remarks>
     ReadOnly Property odiseeGenerateDocumentURI As String
         Get
-            Return protocolCombobox.Text & "://" & odiseeServerURL.Text & odiseeGenerateDocumentURILabel.Text
+            Return protocolCombobox.Text & "://" & odiseeServer & odiseeGenerateDocumentURILabel.Text
         End Get
     End Property
 
@@ -61,7 +101,11 @@ Public Class OdiseeTester
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ReadOnly Property template As String
+    Property template As String
+        Set(value As String)
+            templateComboBox.Text = value
+            My.Settings.odiseeTemplate = value
+        End Set
         Get
             Return templateComboBox.Text
         End Get
@@ -73,7 +117,11 @@ Public Class OdiseeTester
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ReadOnly Property username As String
+    Property username As String
+        Set(value As String)
+            usernameTextBox.Text = value
+            My.Settings.odiseeUsername = value
+        End Set
         Get
             Return usernameTextBox.Text
         End Get
@@ -97,7 +145,11 @@ Public Class OdiseeTester
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ReadOnly Property odiseeXML As String
+    Property odiseeRequestXML As String
+        Set(value As String)
+            odiseeRequestXMLTextBox.Text = value
+            My.Settings.odiseeRequestXML = value
+        End Set
         Get
             Return odiseeRequestXMLTextBox.Text
         End Get
@@ -124,9 +176,10 @@ Public Class OdiseeTester
     Public Sub New()
         ' Dieser Aufruf ist für den Designer erforderlich.
         InitializeComponent()
-        ' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
-        savePath = Environment.GetFolderPath(SpecialFolder.DesktopDirectory)
-        savePathTextBox.Text = savePath
+        '
+        Text = "Odisee(R) Client " & My.Application.Info.Version.ToString
+        ' User settings
+        loadUserSettings()
     End Sub
 
 #Region "Event Listener"
@@ -139,6 +192,47 @@ Public Class OdiseeTester
     ''' <remarks></remarks>
     Private Sub odiseeServiceURLLinkLabel_LinkClicked(ByVal sender As Object, ByVal e As LinkLabelLinkClickedEventArgs) Handles odiseeServiceURLLinkLabel.LinkClicked
         Helper.Desktop.openURL(odiseeServiceURL)
+    End Sub
+
+#End Region
+
+#Region "User Interface"
+
+    ''' <summary>
+    ''' Load user settings.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub loadUserSettings()
+        odiseeServer = My.Settings.odiseeServer
+        username = My.Settings.odiseeUsername
+        template = My.Settings.odiseeTemplate
+        If template = "" Then
+            template = "HalloOdisee"
+        End If
+        savePath = My.Settings.odiseeOutputDirectory
+        If savePath = "" Then
+            savePath = Environment.GetFolderPath(SpecialFolder.DesktopDirectory)
+        End If
+        saveFilename = My.Settings.odiseeOutputFilename
+        If saveFilename = "" Then
+            saveFilename = "OdiseeClientTest.pdf"
+        End If
+        odiseeRequestXML = My.Settings.odiseeRequestXML
+    End Sub
+
+    ''' <summary>
+    ''' Save user settings.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub saveUserSettings()
+        My.Settings.odiseeServer = odiseeServer
+        My.Settings.odiseeTemplate = template
+        My.Settings.odiseeUsername = username
+        My.Settings.odiseeOutputDirectory = savePath
+        My.Settings.odiseeOutputFilename = saveFilename
+        My.Settings.odiseeRequestXML = odiseeRequestXML
+        'My.Settings.Reset()
+        My.Settings.Save()
     End Sub
 
 #End Region
@@ -202,6 +296,8 @@ Public Class OdiseeTester
         If odiseeRequestXMLTextBox.Text.Length = 0 Then
             makeOdiseeRequestButton_Click(Nothing, Nothing)
         End If
+            ' Save user input
+            saveUserSettings()
         ' Clear log textbox
         logTextBox.Clear()
         Try
@@ -215,8 +311,7 @@ Public Class OdiseeTester
             Dim webResponse As WebResponse = odiseeClient.process()
             If Not IsNothing(webResponse) Then
                 If webResponse.ContentLength > 0 Then
-                    Dim filename As String = "OdiseeClientTest.pdf"
-                    Dim fullPath As String = savePathTextBox.Text & "\" & filename
+                        Dim fullPath As String = savePathTextBox.Text & "\" & saveFilename
                     Helper.HttpPost.saveDocument(odiseeClient.xmlDoc, webResponse, fullPath)
                     Try
                         Dim process As Process = System.Diagnostics.Process.Start(fullPath)
