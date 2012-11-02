@@ -53,6 +53,78 @@ Namespace My
                 Return defaultInstance
             End Get
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property odiseeServer() As String
+            Get
+                Return CType(Me("odiseeServer"),String)
+            End Get
+            Set
+                Me("odiseeServer") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property odiseeUsername() As String
+            Get
+                Return CType(Me("odiseeUsername"),String)
+            End Get
+            Set
+                Me("odiseeUsername") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property odiseeTemplate() As String
+            Get
+                Return CType(Me("odiseeTemplate"),String)
+            End Get
+            Set
+                Me("odiseeTemplate") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property odiseeOutputDirectory() As String
+            Get
+                Return CType(Me("odiseeOutputDirectory"),String)
+            End Get
+            Set
+                Me("odiseeOutputDirectory") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property odiseeOutputFilename() As String
+            Get
+                Return CType(Me("odiseeOutputFilename"),String)
+            End Get
+            Set
+                Me("odiseeOutputFilename") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property odiseeRequestXML() As String
+            Get
+                Return CType(Me("odiseeRequestXML"),String)
+            End Get
+            Set
+                Me("odiseeRequestXML") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
