@@ -190,6 +190,8 @@ Namespace Helper
                 httpWebRequest.Method = "GET"
                 Try
                     Dim firstResponse As WebResponse = httpWebRequest.GetResponse()
+                    firstResponse.Close()
+                    initializedHttpDigestAuth = True
                 Catch ex As Exception
                     ' HTTP 401 Not authorized, ok in first step of Digest authentication
                 End Try
@@ -205,18 +207,18 @@ Namespace Helper
             Try
                 ' Set content length
                 httpWebRequest.ContentLength = byteBuffer.Length()
+                httpWebRequest.Timeout = 5000
                 ' Write to request stream
                 Dim stream As Stream = httpWebRequest.GetRequestStream()
                 stream.Write(byteBuffer, 0, byteBuffer.Length)
-                stream.Close()
-                stream.Dispose()
+                ' Do not: stream.Close() and stream.Dispose(), subsequent requests will die at .GetRequestStream()
                 ' Return response
                 httpWebResponse = CType(httpWebRequest.GetResponse(), Net.HttpWebResponse)
             Catch ex As Exception
                 ' Handle exceptions
                 ' HTTP 401: Not authorized, check username/password if any
                 ' HTTP 404: Not found, maybe Odisee Server URL or XML request is empty or corrupt
-                'Throw ex
+                Throw ex
             End Try
             Return httpWebResponse
         End Function
@@ -225,18 +227,16 @@ Namespace Helper
         ''' Save a document to disk. Process Odisee server's response and save the returned byte stream to a file.
         ''' </summary>
         ''' <param name="xmlDocument"></param>
-        ''' <param name="webResponse"></param>
+        ''' <param name="httpWebResponse"></param>
         ''' <param name="filepath"></param>
         ''' <remarks></remarks>
-        Public Shared Sub saveDocument(ByRef xmlDocument As XmlDocument, ByRef webResponse As WebResponse, Optional ByVal filepath As String = Nothing)
-            ' Cast to HttpWebResponse
-            Dim httpWebResponse As HttpWebResponse = CType(webResponse, HttpWebResponse)
+        Public Shared Sub saveDocument(ByRef xmlDocument As XmlDocument, ByRef httpWebResponse As HttpWebResponse, Optional ByVal filepath As String = Nothing)
             ' Set filepath from request name
             If IsNothing(filepath) Then
                 filepath = xmlDocument.SelectSingleNode(OdiseeConstant.REQUEST_NAME).InnerText
             End If
             ' Get response code
-            Dim status As String = httpWebResponse.StatusDescription.ToString()
+            Dim status As String = HttpWebResponse.StatusDescription.ToString()
             ' Open file handle
             Dim fileStream As FileStream = New FileStream(filepath, FileMode.Create)
             ' Buffer for reading response stream
@@ -245,7 +245,7 @@ Namespace Helper
             Dim responseStream As Stream = Nothing
             Try
                 ' Get response stream
-                responseStream = httpWebResponse.GetResponseStream()
+                responseStream = HttpWebResponse.GetResponseStream()
                 ' Read bytes and write them to file
                 Dim readCount As Integer = responseStream.Read(byteBuffer, 0, bufferSize)
                 Dim totalReadCount As Long
@@ -255,7 +255,7 @@ Namespace Helper
                     totalReadCount = totalReadCount + readCount
                 End While
                 ' Compare read byte count with content-length header
-                If totalReadCount <> httpWebResponse.ContentLength Then
+                If totalReadCount <> HttpWebResponse.ContentLength Then
                 Else
                     ' Error handling
                 End If

@@ -398,7 +398,7 @@ Namespace Http
             ' Set template
             setLatestTemplate(actualRequest, template, outputFormat)
             ' Archiving
-            setArchive(False, False)
+            setArchive(False, True)
             ' <instructions>
             Dim instructionsElement As XmlElement = __xmlDoc.CreateElement("instructions")
             actualRequest.AppendChild(instructionsElement)
@@ -411,7 +411,7 @@ Namespace Http
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function process() As WebResponse
+        Public Function process() As HttpWebResponse
             ' Check state
             ' Service URL set?
             If IsNothing(serviceURL) Then
@@ -422,7 +422,7 @@ Namespace Http
                 Throw New Exception(OdiseeConstant.ERR_NO_AUTH_INFO)
             End If
             ' Send Odisee request XML document through HTTP POST
-            Dim webResponse As WebResponse
+            Dim webResponse As HttpWebResponse
             If Not IsNothing(username) And Not IsNothing(password) Then
                 webResponse = Helper.HttpPost.doPost(__xmlDoc, New Uri(serviceURL), username, password)
             Else

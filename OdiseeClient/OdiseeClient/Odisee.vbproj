@@ -28,7 +28,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
     <InstallUrl>http://files.odisee.de/product/odisee-client/windows/vbnet/</InstallUrl>
-    <SupportUrl>http://support.odisee.de/</SupportUrl>
+    <SupportUrl>http://www.odisee.de/support</SupportUrl>
     <ErrorReportUrl>http://support.odisee.de/</ErrorReportUrl>
     <ProductName>Odisee Client</ProductName>
     <PublisherName>art of coding UG</PublisherName>
@@ -36,7 +36,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>index.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>10</ApplicationRevision>
+    <ApplicationRevision>15</ApplicationRevision>
     <ApplicationVersion>2.2.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -93,12 +93,22 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Odisee_Signet_32x32.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -111,6 +121,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="OdiseeClientSplashScreen.Designer.vb">
+      <DependentUpon>OdiseeClientSplashScreen.vb</DependentUpon>
+    </Compile>
+    <Compile Include="OdiseeClientSplashScreen.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="OdiseeSingleRequestClient.vb" />
     <Compile Include="OdiseeConstant.vb" />
     <Compile Include="OdiseeHelper.vb" />
@@ -139,6 +155,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="OdiseeClientSplashScreen.resx">
+      <DependentUpon>OdiseeClientSplashScreen.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OdiseeTester.resx">
       <DependentUpon>OdiseeTester.vb</DependentUpon>
     </EmbeddedResource>
@@ -177,6 +196,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Odisee_Signet_64x64.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Odisee_Maskottchen_negativ.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Odisee_Maskottchen_positiv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Odisee_Signet_32x32.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

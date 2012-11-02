@@ -22,7 +22,8 @@ Partial Class OdiseeTester
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.odiseeServerURL = New System.Windows.Forms.TextBox()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(OdiseeTester))
+        Me.odiseeServerURLTextBox = New System.Windows.Forms.TextBox()
         Me.odiseeRequestXMLTextBox = New System.Windows.Forms.TextBox()
         Me.makeOdiseeRequestButton = New System.Windows.Forms.Button()
         Me.sendOdiseeRequestButton = New System.Windows.Forms.Button()
@@ -42,33 +43,39 @@ Partial Class OdiseeTester
         Me.chooseFolderButton = New System.Windows.Forms.Button()
         Me.savePathTextBox = New System.Windows.Forms.TextBox()
         Me.odiseeSettingsGroupBox = New System.Windows.Forms.GroupBox()
+        Me.odiseeLogoPictureBox = New System.Windows.Forms.PictureBox()
         Me.odiseeInputGroupBox = New System.Windows.Forms.GroupBox()
         Me.odiseeOutputGroupBox = New System.Windows.Forms.GroupBox()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.saveFilenameTextBox = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.odiseeSettingsGroupBox.SuspendLayout()
+        CType(Me.odiseeLogoPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.odiseeInputGroupBox.SuspendLayout()
         Me.odiseeOutputGroupBox.SuspendLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'odiseeServerURL
+        'odiseeServerURLTextBox
         '
-        Me.odiseeServerURL.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
-        Me.odiseeServerURL.Location = New System.Drawing.Point(244, 14)
-        Me.odiseeServerURL.Name = "odiseeServerURL"
-        Me.odiseeServerURL.Size = New System.Drawing.Size(221, 20)
-        Me.odiseeServerURL.TabIndex = 2
-        Me.odiseeServerURL.Text = "127.0.0.1"
+        Me.odiseeServerURLTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.odiseeServerURLTextBox.Location = New System.Drawing.Point(244, 14)
+        Me.odiseeServerURLTextBox.Name = "odiseeServerURLTextBox"
+        Me.odiseeServerURLTextBox.Size = New System.Drawing.Size(221, 20)
+        Me.odiseeServerURLTextBox.TabIndex = 2
+        Me.odiseeServerURLTextBox.Text = "127.0.0.1"
         '
         'odiseeRequestXMLTextBox
         '
+        Me.odiseeRequestXMLTextBox.AutoCompleteCustomSource.AddRange(New String() {"odisee", "request"})
+        Me.odiseeRequestXMLTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.odiseeRequestXMLTextBox.BackColor = System.Drawing.SystemColors.Window
+        Me.odiseeRequestXMLTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.odiseeRequestXMLTextBox.Font = New System.Drawing.Font("Courier New", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.odiseeRequestXMLTextBox.Location = New System.Drawing.Point(6, 73)
         Me.odiseeRequestXMLTextBox.Multiline = True
         Me.odiseeRequestXMLTextBox.Name = "odiseeRequestXMLTextBox"
         Me.odiseeRequestXMLTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both
         Me.odiseeRequestXMLTextBox.Size = New System.Drawing.Size(968, 225)
-        Me.odiseeRequestXMLTextBox.TabIndex = 6
+        Me.odiseeRequestXMLTextBox.TabIndex = 8
         Me.odiseeRequestXMLTextBox.WordWrap = False
         '
         'makeOdiseeRequestButton
@@ -76,7 +83,7 @@ Partial Class OdiseeTester
         Me.makeOdiseeRequestButton.Location = New System.Drawing.Point(840, 43)
         Me.makeOdiseeRequestButton.Name = "makeOdiseeRequestButton"
         Me.makeOdiseeRequestButton.Size = New System.Drawing.Size(134, 23)
-        Me.makeOdiseeRequestButton.TabIndex = 0
+        Me.makeOdiseeRequestButton.TabIndex = 7
         Me.makeOdiseeRequestButton.Text = "Make Odisee request"
         Me.makeOdiseeRequestButton.UseVisualStyleBackColor = True
         '
@@ -85,7 +92,7 @@ Partial Class OdiseeTester
         Me.sendOdiseeRequestButton.Location = New System.Drawing.Point(840, 17)
         Me.sendOdiseeRequestButton.Name = "sendOdiseeRequestButton"
         Me.sendOdiseeRequestButton.Size = New System.Drawing.Size(134, 23)
-        Me.sendOdiseeRequestButton.TabIndex = 0
+        Me.sendOdiseeRequestButton.TabIndex = 12
         Me.sendOdiseeRequestButton.Text = "Send to Odisee Server"
         Me.sendOdiseeRequestButton.UseVisualStyleBackColor = True
         '
@@ -103,7 +110,7 @@ Partial Class OdiseeTester
         Me.odiseeTemplatesLinkLabel.Location = New System.Drawing.Point(6, 16)
         Me.odiseeTemplatesLinkLabel.Name = "odiseeTemplatesLinkLabel"
         Me.odiseeTemplatesLinkLabel.Size = New System.Drawing.Size(51, 13)
-        Me.odiseeTemplatesLinkLabel.TabIndex = 6
+        Me.odiseeTemplatesLinkLabel.TabIndex = 20
         Me.odiseeTemplatesLinkLabel.TabStop = True
         Me.odiseeTemplatesLinkLabel.Text = "Template"
         '
@@ -166,7 +173,7 @@ Partial Class OdiseeTester
         Me.mergeDocumentCheckBox.Location = New System.Drawing.Point(9, 43)
         Me.mergeDocumentCheckBox.Name = "mergeDocumentCheckBox"
         Me.mergeDocumentCheckBox.Size = New System.Drawing.Size(106, 17)
-        Me.mergeDocumentCheckBox.TabIndex = 14
+        Me.mergeDocumentCheckBox.TabIndex = 21
         Me.mergeDocumentCheckBox.Text = "Merge document"
         Me.mergeDocumentCheckBox.UseVisualStyleBackColor = True
         '
@@ -175,7 +182,7 @@ Partial Class OdiseeTester
         Me.mergeDocumentTextBox.Location = New System.Drawing.Point(156, 41)
         Me.mergeDocumentTextBox.Name = "mergeDocumentTextBox"
         Me.mergeDocumentTextBox.Size = New System.Drawing.Size(212, 20)
-        Me.mergeDocumentTextBox.TabIndex = 0
+        Me.mergeDocumentTextBox.TabIndex = 6
         '
         'Label2
         '
@@ -188,12 +195,13 @@ Partial Class OdiseeTester
         '
         'logTextBox
         '
+        Me.logTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.logTextBox.Location = New System.Drawing.Point(8, 46)
         Me.logTextBox.Name = "logTextBox"
         Me.logTextBox.ReadOnly = True
         Me.logTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth
         Me.logTextBox.Size = New System.Drawing.Size(966, 184)
-        Me.logTextBox.TabIndex = 0
+        Me.logTextBox.TabIndex = 22
         Me.logTextBox.Text = ""
         '
         'chooseFolderButton
@@ -201,7 +209,7 @@ Partial Class OdiseeTester
         Me.chooseFolderButton.Location = New System.Drawing.Point(8, 17)
         Me.chooseFolderButton.Name = "chooseFolderButton"
         Me.chooseFolderButton.Size = New System.Drawing.Size(83, 23)
-        Me.chooseFolderButton.TabIndex = 0
+        Me.chooseFolderButton.TabIndex = 9
         Me.chooseFolderButton.Text = "Directory..."
         Me.chooseFolderButton.UseVisualStyleBackColor = True
         '
@@ -210,11 +218,11 @@ Partial Class OdiseeTester
         Me.savePathTextBox.Location = New System.Drawing.Point(97, 20)
         Me.savePathTextBox.Name = "savePathTextBox"
         Me.savePathTextBox.Size = New System.Drawing.Size(206, 20)
-        Me.savePathTextBox.TabIndex = 7
+        Me.savePathTextBox.TabIndex = 10
         '
         'odiseeSettingsGroupBox
         '
-        Me.odiseeSettingsGroupBox.Controls.Add(Me.PictureBox1)
+        Me.odiseeSettingsGroupBox.Controls.Add(Me.odiseeLogoPictureBox)
         Me.odiseeSettingsGroupBox.Controls.Add(Me.Label2)
         Me.odiseeSettingsGroupBox.Controls.Add(Me.passwordTextBox)
         Me.odiseeSettingsGroupBox.Controls.Add(Me.Label1)
@@ -222,7 +230,7 @@ Partial Class OdiseeTester
         Me.odiseeSettingsGroupBox.Controls.Add(Me.odiseeGenerateDocumentURILabel)
         Me.odiseeSettingsGroupBox.Controls.Add(Me.protocolCombobox)
         Me.odiseeSettingsGroupBox.Controls.Add(Me.odiseeServiceURLLinkLabel)
-        Me.odiseeSettingsGroupBox.Controls.Add(Me.odiseeServerURL)
+        Me.odiseeSettingsGroupBox.Controls.Add(Me.odiseeServerURLTextBox)
         Me.odiseeSettingsGroupBox.Location = New System.Drawing.Point(16, 12)
         Me.odiseeSettingsGroupBox.Name = "odiseeSettingsGroupBox"
         Me.odiseeSettingsGroupBox.Size = New System.Drawing.Size(980, 86)
@@ -230,8 +238,21 @@ Partial Class OdiseeTester
         Me.odiseeSettingsGroupBox.TabStop = False
         Me.odiseeSettingsGroupBox.Text = "Odisee Server Settings"
         '
+        'odiseeLogoPictureBox
+        '
+        Me.odiseeLogoPictureBox.Image = Global.Odisee.Client.My.Resources.Resources.Odisee_Signet_64x64
+        Me.odiseeLogoPictureBox.Location = New System.Drawing.Point(910, 13)
+        Me.odiseeLogoPictureBox.Margin = New System.Windows.Forms.Padding(0)
+        Me.odiseeLogoPictureBox.MaximumSize = New System.Drawing.Size(64, 64)
+        Me.odiseeLogoPictureBox.Name = "odiseeLogoPictureBox"
+        Me.odiseeLogoPictureBox.Size = New System.Drawing.Size(64, 64)
+        Me.odiseeLogoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
+        Me.odiseeLogoPictureBox.TabIndex = 17
+        Me.odiseeLogoPictureBox.TabStop = False
+        '
         'odiseeInputGroupBox
         '
+        Me.odiseeInputGroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.odiseeInputGroupBox.Controls.Add(Me.mergeDocumentTextBox)
         Me.odiseeInputGroupBox.Controls.Add(Me.mergeDocumentCheckBox)
         Me.odiseeInputGroupBox.Controls.Add(Me.odiseeTemplatesLinkLabel)
@@ -247,6 +268,8 @@ Partial Class OdiseeTester
         '
         'odiseeOutputGroupBox
         '
+        Me.odiseeOutputGroupBox.Controls.Add(Me.saveFilenameTextBox)
+        Me.odiseeOutputGroupBox.Controls.Add(Me.Label3)
         Me.odiseeOutputGroupBox.Controls.Add(Me.savePathTextBox)
         Me.odiseeOutputGroupBox.Controls.Add(Me.chooseFolderButton)
         Me.odiseeOutputGroupBox.Controls.Add(Me.logTextBox)
@@ -258,40 +281,48 @@ Partial Class OdiseeTester
         Me.odiseeOutputGroupBox.TabStop = False
         Me.odiseeOutputGroupBox.Text = "Output from Odisee Server"
         '
-        'PictureBox1
+        'saveFilenameTextBox
         '
-        Me.PictureBox1.Image = Global.Odisee.Client.My.Resources.Resources.Odisee_Signet_64x64
-        Me.PictureBox1.Location = New System.Drawing.Point(910, 13)
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(0)
-        Me.PictureBox1.MaximumSize = New System.Drawing.Size(64, 64)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(64, 64)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
-        Me.PictureBox1.TabIndex = 17
-        Me.PictureBox1.TabStop = False
+        Me.saveFilenameTextBox.Location = New System.Drawing.Point(374, 19)
+        Me.saveFilenameTextBox.Name = "saveFilenameTextBox"
+        Me.saveFilenameTextBox.Size = New System.Drawing.Size(176, 20)
+        Me.saveFilenameTextBox.TabIndex = 11
+        Me.saveFilenameTextBox.Text = "OdiseeClientTest.pdf"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(310, 22)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(58, 13)
+        Me.Label3.TabIndex = 8
+        Me.Label3.Text = "Dateiname"
         '
         'OdiseeTester
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.ClientSize = New System.Drawing.Size(1008, 662)
-        Me.Controls.Add(Me.odiseeOutputGroupBox)
-        Me.Controls.Add(Me.odiseeInputGroupBox)
         Me.Controls.Add(Me.odiseeSettingsGroupBox)
+        Me.Controls.Add(Me.odiseeInputGroupBox)
+        Me.Controls.Add(Me.odiseeOutputGroupBox)
+        Me.DoubleBuffered = True
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.Name = "OdiseeTester"
         Me.Text = "Odisee(R) Client"
         Me.odiseeSettingsGroupBox.ResumeLayout(False)
         Me.odiseeSettingsGroupBox.PerformLayout()
+        CType(Me.odiseeLogoPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.odiseeInputGroupBox.ResumeLayout(False)
         Me.odiseeInputGroupBox.PerformLayout()
         Me.odiseeOutputGroupBox.ResumeLayout(False)
         Me.odiseeOutputGroupBox.PerformLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents odiseeServerURL As System.Windows.Forms.TextBox
+    Friend WithEvents odiseeServerURLTextBox As System.Windows.Forms.TextBox
     Friend WithEvents odiseeRequestXMLTextBox As System.Windows.Forms.TextBox
     Friend WithEvents makeOdiseeRequestButton As System.Windows.Forms.Button
     Friend WithEvents sendOdiseeRequestButton As System.Windows.Forms.Button
@@ -313,6 +344,8 @@ Partial Class OdiseeTester
     Friend WithEvents odiseeSettingsGroupBox As System.Windows.Forms.GroupBox
     Friend WithEvents odiseeInputGroupBox As System.Windows.Forms.GroupBox
     Friend WithEvents odiseeOutputGroupBox As System.Windows.Forms.GroupBox
-    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
+    Friend WithEvents odiseeLogoPictureBox As System.Windows.Forms.PictureBox
+    Friend WithEvents saveFilenameTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents Label3 As System.Windows.Forms.Label
 
 End Class
