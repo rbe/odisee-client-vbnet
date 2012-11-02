@@ -296,6 +296,9 @@ Public Class OdiseeTester
         If odiseeRequestXMLTextBox.Text.Length = 0 Then
             makeOdiseeRequestButton_Click(Nothing, Nothing)
         End If
+        If odiseeServer = "" Or username = "" Or password = "" Then
+            MsgBox("Bitte geben Sie einen Server, Benutzername und Passwort ein!")
+        Else
             ' Save user input
             saveUserSettings()
         ' Clear log textbox
