@@ -275,7 +275,7 @@ Public Class OdiseeTester
         Dim request1 As XmlElement = odiseeClient.createRequest(template)
         ' Set some values using the fluent API...
         odiseeClient.
-            setUserfield("Hallo", "Welt von OdiseeClient/VB.NET").
+            setUserfield("Hallo", "Welt von " & My.User.Name).
             setTableCellValue("Tabelle1", "A4", "Dieser Text stammt vom OdiseeClient/VB.NET!")
         ' Merge document?
         If mergeDocumentCheckBox.Checked Then
