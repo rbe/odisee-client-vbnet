@@ -63,6 +63,26 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property Odisee_Maskottchen_negativ() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Odisee_Maskottchen_negativ", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Odisee_Maskottchen_positiv() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Odisee_Maskottchen_positiv", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property Odisee_Signet_64x64() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("Odisee_Signet_64x64", resourceCulture)
