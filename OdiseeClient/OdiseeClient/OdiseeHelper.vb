@@ -207,6 +207,7 @@ Namespace Helper
             Try
                 ' Set content length
                 httpWebRequest.ContentLength = byteBuffer.Length()
+                ' Timeout
                 httpWebRequest.Timeout = 5000
                 ' Write to request stream
                 Dim stream As Stream = httpWebRequest.GetRequestStream()
