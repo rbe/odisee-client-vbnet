@@ -2,8 +2,8 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <PublishUrlHistory>publish\</PublishUrlHistory>
-    <InstallUrlHistory>http://files.odisee.de/product/odisee-client/windows/vbnet/|http://files.odisee.de/product/odisee-client/windows/</InstallUrlHistory>
-    <SupportUrlHistory>http://www.odisee.de/support|http://support.odisee.de/</SupportUrlHistory>
+    <InstallUrlHistory>http://www.odisee.de/download/odisee-client/windows/vbnet/|http://download.odisee.de/download/odisee-client/windows/vbnet/|http://files.odisee.de/product/odisee-client/windows/vbnet/|http://files.odisee.de/product/odisee-client/windows/</InstallUrlHistory>
+    <SupportUrlHistory>http://www.odisee.de/|http://www.odisee.de/support|http://support.odisee.de/</SupportUrlHistory>
     <UpdateUrlHistory />
     <BootstrapperUrlHistory />
     <ErrorReportUrlHistory>http://support.odisee.de/</ErrorReportUrlHistory>
