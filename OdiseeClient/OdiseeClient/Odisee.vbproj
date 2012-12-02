@@ -27,8 +27,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
-    <InstallUrl>http://files.odisee.de/product/odisee-client/windows/vbnet/</InstallUrl>
-    <SupportUrl>http://www.odisee.de/support</SupportUrl>
+    <InstallUrl>http://www.odisee.de/download/odisee-client/windows/vbnet/</InstallUrl>
+    <SupportUrl>http://www.odisee.de/</SupportUrl>
     <ErrorReportUrl>http://support.odisee.de/</ErrorReportUrl>
     <ProductName>Odisee Client</ProductName>
     <PublisherName>art of coding UG</PublisherName>
@@ -36,7 +36,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>index.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>15</ApplicationRevision>
+    <ApplicationRevision>16</ApplicationRevision>
     <ApplicationVersion>2.2.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>

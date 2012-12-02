@@ -48,10 +48,19 @@ Partial Class OdiseeTester
         Me.odiseeOutputGroupBox = New System.Windows.Forms.GroupBox()
         Me.saveFilenameTextBox = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.toolbarStatusStrip = New System.Windows.Forms.StatusStrip()
+        Me.toolStripProgressBar = New System.Windows.Forms.ToolStripProgressBar()
+        Me.toolStripStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.toolStrip = New System.Windows.Forms.ToolStrip()
+        Me.toolStripWebsiteLabel = New System.Windows.Forms.ToolStripLabel()
+        Me.timeoutInSecondsTextBox = New System.Windows.Forms.TextBox()
+        Me.timeoutInSecondsLabel = New System.Windows.Forms.Label()
         Me.odiseeSettingsGroupBox.SuspendLayout()
         CType(Me.odiseeLogoPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.odiseeInputGroupBox.SuspendLayout()
         Me.odiseeOutputGroupBox.SuspendLayout()
+        Me.toolbarStatusStrip.SuspendLayout()
+        Me.toolStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'odiseeServerURLTextBox
@@ -74,7 +83,7 @@ Partial Class OdiseeTester
         Me.odiseeRequestXMLTextBox.Multiline = True
         Me.odiseeRequestXMLTextBox.Name = "odiseeRequestXMLTextBox"
         Me.odiseeRequestXMLTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.odiseeRequestXMLTextBox.Size = New System.Drawing.Size(968, 225)
+        Me.odiseeRequestXMLTextBox.Size = New System.Drawing.Size(968, 268)
         Me.odiseeRequestXMLTextBox.TabIndex = 8
         Me.odiseeRequestXMLTextBox.WordWrap = False
         '
@@ -200,7 +209,7 @@ Partial Class OdiseeTester
         Me.logTextBox.Name = "logTextBox"
         Me.logTextBox.ReadOnly = True
         Me.logTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth
-        Me.logTextBox.Size = New System.Drawing.Size(966, 184)
+        Me.logTextBox.Size = New System.Drawing.Size(966, 112)
         Me.logTextBox.TabIndex = 22
         Me.logTextBox.Text = ""
         '
@@ -231,7 +240,7 @@ Partial Class OdiseeTester
         Me.odiseeSettingsGroupBox.Controls.Add(Me.protocolCombobox)
         Me.odiseeSettingsGroupBox.Controls.Add(Me.odiseeServiceURLLinkLabel)
         Me.odiseeSettingsGroupBox.Controls.Add(Me.odiseeServerURLTextBox)
-        Me.odiseeSettingsGroupBox.Location = New System.Drawing.Point(16, 12)
+        Me.odiseeSettingsGroupBox.Location = New System.Drawing.Point(12, 28)
         Me.odiseeSettingsGroupBox.Name = "odiseeSettingsGroupBox"
         Me.odiseeSettingsGroupBox.Size = New System.Drawing.Size(980, 86)
         Me.odiseeSettingsGroupBox.TabIndex = 21
@@ -259,24 +268,26 @@ Partial Class OdiseeTester
         Me.odiseeInputGroupBox.Controls.Add(Me.templateComboBox)
         Me.odiseeInputGroupBox.Controls.Add(Me.makeOdiseeRequestButton)
         Me.odiseeInputGroupBox.Controls.Add(Me.odiseeRequestXMLTextBox)
-        Me.odiseeInputGroupBox.Location = New System.Drawing.Point(16, 104)
+        Me.odiseeInputGroupBox.Location = New System.Drawing.Point(12, 120)
         Me.odiseeInputGroupBox.Name = "odiseeInputGroupBox"
-        Me.odiseeInputGroupBox.Size = New System.Drawing.Size(980, 304)
+        Me.odiseeInputGroupBox.Size = New System.Drawing.Size(980, 347)
         Me.odiseeInputGroupBox.TabIndex = 22
         Me.odiseeInputGroupBox.TabStop = False
         Me.odiseeInputGroupBox.Text = "Input for Odisee Server"
         '
         'odiseeOutputGroupBox
         '
+        Me.odiseeOutputGroupBox.Controls.Add(Me.timeoutInSecondsLabel)
+        Me.odiseeOutputGroupBox.Controls.Add(Me.timeoutInSecondsTextBox)
         Me.odiseeOutputGroupBox.Controls.Add(Me.saveFilenameTextBox)
         Me.odiseeOutputGroupBox.Controls.Add(Me.Label3)
         Me.odiseeOutputGroupBox.Controls.Add(Me.savePathTextBox)
         Me.odiseeOutputGroupBox.Controls.Add(Me.chooseFolderButton)
         Me.odiseeOutputGroupBox.Controls.Add(Me.logTextBox)
         Me.odiseeOutputGroupBox.Controls.Add(Me.sendOdiseeRequestButton)
-        Me.odiseeOutputGroupBox.Location = New System.Drawing.Point(10, 414)
+        Me.odiseeOutputGroupBox.Location = New System.Drawing.Point(12, 473)
         Me.odiseeOutputGroupBox.Name = "odiseeOutputGroupBox"
-        Me.odiseeOutputGroupBox.Size = New System.Drawing.Size(980, 236)
+        Me.odiseeOutputGroupBox.Size = New System.Drawing.Size(984, 164)
         Me.odiseeOutputGroupBox.TabIndex = 23
         Me.odiseeOutputGroupBox.TabStop = False
         Me.odiseeOutputGroupBox.Text = "Output from Odisee Server"
@@ -298,12 +309,69 @@ Partial Class OdiseeTester
         Me.Label3.TabIndex = 8
         Me.Label3.Text = "Dateiname"
         '
+        'toolbarStatusStrip
+        '
+        Me.toolbarStatusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripProgressBar, Me.toolStripStatusLabel})
+        Me.toolbarStatusStrip.Location = New System.Drawing.Point(0, 640)
+        Me.toolbarStatusStrip.Name = "toolbarStatusStrip"
+        Me.toolbarStatusStrip.Size = New System.Drawing.Size(1008, 22)
+        Me.toolbarStatusStrip.TabIndex = 24
+        Me.toolbarStatusStrip.Text = "h"
+        '
+        'toolStripProgressBar
+        '
+        Me.toolStripProgressBar.Name = "toolStripProgressBar"
+        Me.toolStripProgressBar.Size = New System.Drawing.Size(100, 16)
+        '
+        'toolStripStatusLabel
+        '
+        Me.toolStripStatusLabel.Name = "toolStripStatusLabel"
+        Me.toolStripStatusLabel.Size = New System.Drawing.Size(40, 17)
+        Me.toolStripStatusLabel.Text = "Bereit."
+        '
+        'toolStrip
+        '
+        Me.toolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripWebsiteLabel})
+        Me.toolStrip.Location = New System.Drawing.Point(0, 0)
+        Me.toolStrip.Name = "toolStrip"
+        Me.toolStrip.Size = New System.Drawing.Size(1008, 25)
+        Me.toolStrip.TabIndex = 25
+        Me.toolStrip.Text = "toolStrip"
+        '
+        'toolStripWebsiteLabel
+        '
+        Me.toolStripWebsiteLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.toolStripWebsiteLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.toolStripWebsiteLabel.IsLink = True
+        Me.toolStripWebsiteLabel.Name = "toolStripWebsiteLabel"
+        Me.toolStripWebsiteLabel.Size = New System.Drawing.Size(87, 22)
+        Me.toolStripWebsiteLabel.Text = "www.odisee.de"
+        '
+        'timeoutInSecondsTextBox
+        '
+        Me.timeoutInSecondsTextBox.Location = New System.Drawing.Point(794, 19)
+        Me.timeoutInSecondsTextBox.Name = "timeoutInSecondsTextBox"
+        Me.timeoutInSecondsTextBox.Size = New System.Drawing.Size(35, 20)
+        Me.timeoutInSecondsTextBox.TabIndex = 23
+        Me.timeoutInSecondsTextBox.Text = "20"
+        '
+        'timeoutInSecondsLabel
+        '
+        Me.timeoutInSecondsLabel.AutoSize = True
+        Me.timeoutInSecondsLabel.Location = New System.Drawing.Point(689, 22)
+        Me.timeoutInSecondsLabel.Name = "timeoutInSecondsLabel"
+        Me.timeoutInSecondsLabel.Size = New System.Drawing.Size(99, 13)
+        Me.timeoutInSecondsLabel.TabIndex = 24
+        Me.timeoutInSecondsLabel.Text = "Timeout in seconds"
+        '
         'OdiseeTester
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.ClientSize = New System.Drawing.Size(1008, 662)
+        Me.Controls.Add(Me.toolStrip)
+        Me.Controls.Add(Me.toolbarStatusStrip)
         Me.Controls.Add(Me.odiseeSettingsGroupBox)
         Me.Controls.Add(Me.odiseeInputGroupBox)
         Me.Controls.Add(Me.odiseeOutputGroupBox)
@@ -319,7 +387,12 @@ Partial Class OdiseeTester
         Me.odiseeInputGroupBox.PerformLayout()
         Me.odiseeOutputGroupBox.ResumeLayout(False)
         Me.odiseeOutputGroupBox.PerformLayout()
+        Me.toolbarStatusStrip.ResumeLayout(False)
+        Me.toolbarStatusStrip.PerformLayout()
+        Me.toolStrip.ResumeLayout(False)
+        Me.toolStrip.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents odiseeServerURLTextBox As System.Windows.Forms.TextBox
@@ -347,5 +420,12 @@ Partial Class OdiseeTester
     Friend WithEvents odiseeLogoPictureBox As System.Windows.Forms.PictureBox
     Friend WithEvents saveFilenameTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents toolbarStatusStrip As System.Windows.Forms.StatusStrip
+    Friend WithEvents toolStripProgressBar As System.Windows.Forms.ToolStripProgressBar
+    Friend WithEvents toolStripStatusLabel As System.Windows.Forms.ToolStripStatusLabel
+    Friend WithEvents toolStrip As System.Windows.Forms.ToolStrip
+    Friend WithEvents toolStripWebsiteLabel As System.Windows.Forms.ToolStripLabel
+    Friend WithEvents timeoutInSecondsLabel As System.Windows.Forms.Label
+    Friend WithEvents timeoutInSecondsTextBox As System.Windows.Forms.TextBox
 
 End Class
