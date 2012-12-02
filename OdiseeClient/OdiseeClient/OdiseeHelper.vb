@@ -178,9 +178,10 @@ Namespace Helper
         ''' <param name="serviceURL"></param>
         ''' <param name="username"></param>
         ''' <param name="password"></param>
+        ''' <param name="timeout">In Milliseconds</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function doPost(ByRef xmlDocument As XmlDocument, ByRef serviceURL As Uri, Optional ByVal username As String = Nothing, Optional ByVal password As String = Nothing) As HttpWebResponse
+        Public Shared Function doPost(ByRef xmlDocument As XmlDocument, ByRef serviceURL As Uri, Optional ByVal username As String = Nothing, Optional ByVal password As String = Nothing, Optional ByVal timeout As Integer = 30000) As HttpWebResponse
             Dim httpWebRequest As HttpWebRequest
             If Not initializedHttpDigestAuth Then
                 ' Create instance of WebRequest
@@ -208,7 +209,7 @@ Namespace Helper
                 ' Set content length
                 httpWebRequest.ContentLength = byteBuffer.Length()
                 ' Timeout
-                httpWebRequest.Timeout = 5000
+                httpWebRequest.Timeout = timeout
                 ' Write to request stream
                 Dim stream As Stream = httpWebRequest.GetRequestStream()
                 stream.Write(byteBuffer, 0, byteBuffer.Length)

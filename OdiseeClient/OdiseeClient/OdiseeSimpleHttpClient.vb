@@ -411,7 +411,7 @@ Namespace Http
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function process() As HttpWebResponse
+        Public Function process(Optional ByVal timeout As Integer = 30000) As HttpWebResponse
             ' Check state
             ' Service URL set?
             If IsNothing(serviceURL) Then
@@ -424,7 +424,7 @@ Namespace Http
             ' Send Odisee request XML document through HTTP POST
             Dim webResponse As HttpWebResponse
             If Not IsNothing(username) And Not IsNothing(password) Then
-                webResponse = Helper.HttpPost.doPost(__xmlDoc, New Uri(serviceURL), username, password)
+                webResponse = Helper.HttpPost.doPost(__xmlDoc, New Uri(serviceURL), username, password, timeout)
             Else
                 webResponse = Helper.HttpPost.doPost(__xmlDoc, New Uri(serviceURL))
             End If
