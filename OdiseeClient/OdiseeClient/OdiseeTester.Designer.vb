@@ -49,10 +49,12 @@ Partial Class OdiseeTester
         Me.saveFilenameTextBox = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.toolbarStatusStrip = New System.Windows.Forms.StatusStrip()
-        Me.toolStrip = New System.Windows.Forms.ToolStrip()
         Me.toolStripProgressBar = New System.Windows.Forms.ToolStripProgressBar()
         Me.toolStripStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.toolStrip = New System.Windows.Forms.ToolStrip()
         Me.toolStripWebsiteLabel = New System.Windows.Forms.ToolStripLabel()
+        Me.timeoutInSecondsTextBox = New System.Windows.Forms.TextBox()
+        Me.timeoutInSecondsLabel = New System.Windows.Forms.Label()
         Me.odiseeSettingsGroupBox.SuspendLayout()
         CType(Me.odiseeLogoPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.odiseeInputGroupBox.SuspendLayout()
@@ -275,6 +277,8 @@ Partial Class OdiseeTester
         '
         'odiseeOutputGroupBox
         '
+        Me.odiseeOutputGroupBox.Controls.Add(Me.timeoutInSecondsLabel)
+        Me.odiseeOutputGroupBox.Controls.Add(Me.timeoutInSecondsTextBox)
         Me.odiseeOutputGroupBox.Controls.Add(Me.saveFilenameTextBox)
         Me.odiseeOutputGroupBox.Controls.Add(Me.Label3)
         Me.odiseeOutputGroupBox.Controls.Add(Me.savePathTextBox)
@@ -314,15 +318,6 @@ Partial Class OdiseeTester
         Me.toolbarStatusStrip.TabIndex = 24
         Me.toolbarStatusStrip.Text = "h"
         '
-        'toolStrip
-        '
-        Me.toolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripWebsiteLabel})
-        Me.toolStrip.Location = New System.Drawing.Point(0, 0)
-        Me.toolStrip.Name = "toolStrip"
-        Me.toolStrip.Size = New System.Drawing.Size(1008, 25)
-        Me.toolStrip.TabIndex = 25
-        Me.toolStrip.Text = "toolStrip"
-        '
         'toolStripProgressBar
         '
         Me.toolStripProgressBar.Name = "toolStripProgressBar"
@@ -334,6 +329,15 @@ Partial Class OdiseeTester
         Me.toolStripStatusLabel.Size = New System.Drawing.Size(40, 17)
         Me.toolStripStatusLabel.Text = "Bereit."
         '
+        'toolStrip
+        '
+        Me.toolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.toolStripWebsiteLabel})
+        Me.toolStrip.Location = New System.Drawing.Point(0, 0)
+        Me.toolStrip.Name = "toolStrip"
+        Me.toolStrip.Size = New System.Drawing.Size(1008, 25)
+        Me.toolStrip.TabIndex = 25
+        Me.toolStrip.Text = "toolStrip"
+        '
         'toolStripWebsiteLabel
         '
         Me.toolStripWebsiteLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
@@ -342,6 +346,23 @@ Partial Class OdiseeTester
         Me.toolStripWebsiteLabel.Name = "toolStripWebsiteLabel"
         Me.toolStripWebsiteLabel.Size = New System.Drawing.Size(87, 22)
         Me.toolStripWebsiteLabel.Text = "www.odisee.de"
+        '
+        'timeoutInSecondsTextBox
+        '
+        Me.timeoutInSecondsTextBox.Location = New System.Drawing.Point(794, 19)
+        Me.timeoutInSecondsTextBox.Name = "timeoutInSecondsTextBox"
+        Me.timeoutInSecondsTextBox.Size = New System.Drawing.Size(35, 20)
+        Me.timeoutInSecondsTextBox.TabIndex = 23
+        Me.timeoutInSecondsTextBox.Text = "20"
+        '
+        'timeoutInSecondsLabel
+        '
+        Me.timeoutInSecondsLabel.AutoSize = True
+        Me.timeoutInSecondsLabel.Location = New System.Drawing.Point(689, 22)
+        Me.timeoutInSecondsLabel.Name = "timeoutInSecondsLabel"
+        Me.timeoutInSecondsLabel.Size = New System.Drawing.Size(99, 13)
+        Me.timeoutInSecondsLabel.TabIndex = 24
+        Me.timeoutInSecondsLabel.Text = "Timeout in seconds"
         '
         'OdiseeTester
         '
@@ -404,5 +425,7 @@ Partial Class OdiseeTester
     Friend WithEvents toolStripStatusLabel As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents toolStrip As System.Windows.Forms.ToolStrip
     Friend WithEvents toolStripWebsiteLabel As System.Windows.Forms.ToolStripLabel
+    Friend WithEvents timeoutInSecondsLabel As System.Windows.Forms.Label
+    Friend WithEvents timeoutInSecondsTextBox As System.Windows.Forms.TextBox
 
 End Class

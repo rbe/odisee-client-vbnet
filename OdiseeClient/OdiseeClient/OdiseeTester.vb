@@ -167,6 +167,18 @@ Public Class OdiseeTester
         End Get
     End Property
 
+    ''' <summary>
+    ''' Timeout in seconds.
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    ReadOnly Property timeout As Integer
+        Get
+            Return CInt(timeoutInSecondsTextBox.Text) * 1000
+        End Get
+    End Property
+
 #End Region
 
     ''' <summary>
@@ -316,15 +328,20 @@ Public Class OdiseeTester
                 Dim request1 As XmlElement = odiseeClient.createRequest(template)
                 ' Parse XML from textbox
                 odiseeClient.xmlDoc.LoadXml(odiseeRequestXML)
-                ' Process reponse: save document to disk
-                Dim webResponse As HttpWebResponse = odiseeClient.process()
+                ' Process reponse
+                Dim webResponse As HttpWebResponse
+                If timeout > 0 Then
+                    webResponse = odiseeClient.process(timeout)
+                Else
+                    webResponse = odiseeClient.process()
+                End If
                 If Not IsNothing(webResponse) Then
                     If webResponse.ContentLength > 0 Then
                         Dim fullPath As String = savePath & "\" & saveFilename
                         Helper.HttpPost.saveDocument(odiseeClient.xmlDoc, webResponse, fullPath)
                         Try
+                            ' Save document to disk
                             Dim process As Process = System.Diagnostics.Process.Start(fullPath)
-                            'process.WaitForExit()
                             toolStripStatusLabel.Text = "Opening generated document..."
                         Catch ex As Exception
                             MsgBox("Saved " & webResponse.ContentLength & " bytes to " & fullPath)
