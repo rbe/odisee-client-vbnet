@@ -411,7 +411,7 @@ Namespace Http
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function process(Optional ByVal timeout As Integer = 30000) As HttpWebResponse
+        Public Function process(Optional ByVal timeout As Integer = 30000, Optional ByVal authType As String = "BASIC") As HttpWebResponse
             ' Check state
             ' Service URL set?
             If IsNothing(serviceURL) Then
@@ -422,11 +422,15 @@ Namespace Http
                 Throw New Exception(OdiseeConstant.ERR_NO_AUTH_INFO)
             End If
             ' Send Odisee request XML document through HTTP POST
-            Dim webResponse As HttpWebResponse
+            Dim webResponse As HttpWebResponse = Nothing
             If Not IsNothing(username) And Not IsNothing(password) Then
-                webResponse = Helper.HttpPost.doPost(__xmlDoc, New Uri(serviceURL), username, password, timeout)
+                If authType = "BASIC" Then
+                    webResponse = Helper.HttpPost.doBasicAuthPost(__xmlDoc, New Uri(serviceURL), username, password, timeout)
+                ElseIf authType = "DIGEST" Then
+                    webResponse = Helper.HttpPost.doDigestAuthPost(__xmlDoc, New Uri(serviceURL), username, password, timeout)
+                End If
             Else
-                webResponse = Helper.HttpPost.doPost(__xmlDoc, New Uri(serviceURL))
+                webResponse = Helper.HttpPost.doBasicAuthPost(__xmlDoc, New Uri(serviceURL), "odisee", "odisee")
             End If
             ' Return response from Odisee HTTP server
             Return webResponse

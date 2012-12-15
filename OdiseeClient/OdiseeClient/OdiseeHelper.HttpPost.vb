@@ -15,89 +15,6 @@ Imports System.Xml
 Namespace Helper
 
     ''' <summary>
-    ''' Helper for desktop applications.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Class Desktop
-
-        ''' <summary>
-        ''' Open an URL, e.g. http://... in a browser.
-        ''' </summary>
-        ''' <param name="url"></param>
-        ''' <remarks></remarks>
-        Public Shared Sub openURL(ByVal url As String)
-            System.Diagnostics.Process.Start(url)
-        End Sub
-
-    End Class
-
-    ''' <summary>
-    ''' Helper for processing XML.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Class Xml
-
-        ''' <summary>
-        ''' Pretty print a XML document.
-        ''' </summary>
-        ''' <param name="xmlDocument"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function prettyPrint(ByRef xmlDocument As XmlDocument) As String
-            Dim xmlReader As XmlNodeReader = New XmlNodeReader(xmlDocument)
-            Dim stringWriter As StringWriter = New StringWriter()
-            Dim xmlWriter As XmlTextWriter = New XmlTextWriter(stringWriter)
-            ' Set formatting options
-            xmlWriter.Formatting = Formatting.Indented
-            xmlWriter.Indentation = 1
-            xmlWriter.IndentChar = CChar("  ")
-            ' Write the document formatted
-            xmlWriter.WriteNode(xmlReader, True)
-            '
-            Return stringWriter.ToString
-        End Function
-
-        ''' <summary>
-        ''' Append an instruction to //request/instructions element.
-        ''' </summary>
-        ''' <param name="requestElement">XmlElement</param>
-        ''' <param name="xmlElement">The XmlElement to append to requestElement's last instruction element</param>
-        ''' <remarks></remarks>
-        Public Shared Sub appendToLastInstruction(ByRef requestElement As XmlElement, ByRef xmlElement As XmlElement)
-            Dim nodes As XmlNodeList = requestElement.SelectNodes(OdiseeConstant.LAST_INSTRUCTION_OF_REQUEST)
-            Dim item As XmlNode = nodes.Item(0)
-            item.AppendChild(xmlElement)
-        End Sub
-
-        ''' <summary>
-        ''' Append an instruction to request's //request[last()]/post-process/instructions[last()] element. 
-        ''' </summary>
-        ''' <param name="requestElement"></param>
-        ''' <param name="xmlElement"></param>
-        ''' <remarks></remarks>
-        Public Shared Sub appendPostProcessInstruction(ByRef requestElement As XmlElement, ByRef xmlElement As XmlElement)
-            ' Get (or create) <post-process> element
-            Dim postProcessNode As XmlNode = requestElement.SelectSingleNode("post-process")
-            If IsNothing(postProcessNode) Then
-                postProcessNode = requestElement.OwnerDocument.CreateElement("post-process")
-                requestElement.AppendChild(postProcessNode)
-            End If
-            ' Get (or create) <instructions> element
-            Dim nodes As XmlNodeList = postProcessNode.SelectNodes(OdiseeConstant.LAST_INSTRUCTION_OF_POSTPROCESS)
-            Dim instructionsElement As XmlNode
-            If nodes.Count > 0 Then
-                instructionsElement = nodes.Item(0)
-            Else
-                instructionsElement = postProcessNode.OwnerDocument.CreateElement("instructions")
-                postProcessNode.AppendChild(instructionsElement)
-            End If
-            ' Append instruction
-            instructionsElement.AppendChild(xmlElement)
-        End Sub
-
-    End Class
-
-    ''' <summary>
     ''' Helper for HTTP POSTs to Odisee servers.
     ''' </summary>
     ''' <remarks></remarks>
@@ -140,29 +57,32 @@ Namespace Helper
         ''' <param name="password"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function doBasicAuthPost(ByRef xmlDocument As XmlDocument, ByRef serviceURL As Uri, Optional ByVal username As String = Nothing, Optional ByVal password As String = Nothing) As WebResponse
+        Public Shared Function doBasicAuthPost(ByRef xmlDocument As XmlDocument, ByRef serviceURL As Uri, Optional ByVal username As String = Nothing, Optional ByVal password As String = Nothing, Optional ByVal timeout As Integer = 30000) As HttpWebResponse
             ' Create instance of WebRequest
-            Dim webRequest As WebRequest = webRequest.Create(serviceURL)
-            webRequest.Method = "POST"
-            webRequest.ContentType = "text/xml"
+            Dim httpWebRequest As HttpWebRequest = makeHttpWebRequest(serviceURL, username, password)
+            httpWebRequest.Method = "POST"
+            httpWebRequest.ContentType = "text/xml"
             ' Authentication?
             If Not IsNothing(username) And Not IsNothing(password) Then
                 ' BASIC
                 Dim authInfo As String = username & ":" & password
                 authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo))
-                webRequest.Headers.Set("Authorization", "Basic " & authInfo)
+                httpWebRequest.Headers.Set("Authorization", "Basic " & authInfo)
             End If
             ' Create byte buffer from XML string
             Dim byteBuffer() As Byte = Encoding.UTF8.GetBytes(xmlDocument.OuterXml)
-            webRequest.ContentLength = byteBuffer.Length()
+            httpWebRequest.ContentLength = byteBuffer.Length()
             ' Send request
             Try
-                Dim stream As Stream = webRequest.GetRequestStream()
+                ' Timeout
+                httpWebRequest.Timeout = timeout
+                '
+                Dim stream As Stream = httpWebRequest.GetRequestStream()
                 stream.Write(byteBuffer, 0, byteBuffer.Length)
                 stream.Close()
                 stream.Dispose()
                 ' Return response
-                Return webRequest.GetResponse()
+                Return CType(httpWebRequest.GetResponse(), HttpWebResponse)
             Catch ex As Exception
                 ' Handle exceptions
                 ' HTTP 401: Not authorized, check username/password if any
@@ -172,17 +92,15 @@ Namespace Helper
         End Function
 
         ''' <summary>
-        ''' Post a XML request to Odisee server using HTTP digest authentication.
+        ''' Initialize HTTP DIGEST authentication.
         ''' </summary>
-        ''' <param name="xmlDocument"></param>
         ''' <param name="serviceURL"></param>
         ''' <param name="username"></param>
         ''' <param name="password"></param>
-        ''' <param name="timeout">In Milliseconds</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function doPost(ByRef xmlDocument As XmlDocument, ByRef serviceURL As Uri, Optional ByVal username As String = Nothing, Optional ByVal password As String = Nothing, Optional ByVal timeout As Integer = 30000) As HttpWebResponse
-            Dim httpWebRequest As HttpWebRequest
+        Private Shared Function initHttpDigestAuth(ByRef serviceURL As Uri, Optional ByVal username As String = Nothing, Optional ByVal password As String = Nothing) As HttpWebRequest
+            Dim httpWebRequest As HttpWebRequest = Nothing
             If Not initializedHttpDigestAuth Then
                 ' Create instance of WebRequest
                 httpWebRequest = makeHttpWebRequest(serviceURL, username, password)
@@ -197,31 +115,60 @@ Namespace Helper
                     ' HTTP 401 Not authorized, ok in first step of Digest authentication
                 End Try
             End If
-            ' Create new instance of WebRequest
-            httpWebRequest = makeHttpWebRequest(serviceURL, username, password)
-            httpWebRequest.Method = "POST"
-            httpWebRequest.ContentType = "text/xml"
-            ' Create byte buffer from XML string
-            Dim byteBuffer() As Byte = Encoding.UTF8.GetBytes(xmlDocument.OuterXml)
-            ' Send request
+            Return httpWebRequest
+        End Function
+
+        ''' <summary>
+        ''' Post a XML request to Odisee server using HTTP digest authentication.
+        ''' </summary>
+        ''' <param name="xmlDocument"></param>
+        ''' <param name="serviceURL"></param>
+        ''' <param name="username"></param>
+        ''' <param name="password"></param>
+        ''' <param name="timeout">In Milliseconds, default is 30 000 = 30 seconds.</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function doDigestAuthPost(ByRef xmlDocument As XmlDocument, ByRef serviceURL As Uri, Optional ByVal username As String = Nothing, Optional ByVal password As String = Nothing, Optional ByVal timeout As Integer = 30000) As HttpWebResponse
+            ' Init for HTTP DIGEST
+            Dim httpWebRequest As HttpWebRequest = initHttpDigestAuth(serviceURL, username, password)
+            Dim trycount As Integer = 0
             Dim httpWebResponse As HttpWebResponse = Nothing
-            Try
-                ' Set content length
-                httpWebRequest.ContentLength = byteBuffer.Length()
-                ' Timeout
-                httpWebRequest.Timeout = timeout
-                ' Write to request stream
-                Dim stream As Stream = httpWebRequest.GetRequestStream()
-                stream.Write(byteBuffer, 0, byteBuffer.Length)
-                ' Do not: stream.Close() and stream.Dispose(), subsequent requests will die at .GetRequestStream()
-                ' Return response
-                httpWebResponse = CType(httpWebRequest.GetResponse(), Net.HttpWebResponse)
-            Catch ex As Exception
-                ' Handle exceptions
-                ' HTTP 401: Not authorized, check username/password if any
-                ' HTTP 404: Not found, maybe Odisee Server URL or XML request is empty or corrupt
-                Throw ex
-            End Try
+            While trycount < 3 And IsNothing(httpWebResponse)
+                ' Create new instance of WebRequest
+                httpWebRequest = makeHttpWebRequest(serviceURL, username, password)
+                httpWebRequest.Method = "POST"
+                httpWebRequest.ContentType = "text/xml"
+                ' Create byte buffer from XML string
+                Dim byteBuffer() As Byte = Encoding.UTF8.GetBytes(xmlDocument.OuterXml)
+                ' Send request
+                Try
+                    ' Set content length
+                    httpWebRequest.ContentLength = byteBuffer.Length()
+                    ' Timeout
+                    httpWebRequest.Timeout = timeout
+                    ' Write to request stream
+                    Dim stream As Stream = httpWebRequest.GetRequestStream()
+                    stream.Write(byteBuffer, 0, byteBuffer.Length)
+                    ' Do not: stream.Close() and stream.Dispose(), subsequent requests will die at .GetRequestStream()
+                    ' Return response
+                    httpWebResponse = CType(httpWebRequest.GetResponse(), HttpWebResponse)
+                Catch ex As Exception
+                    ' Handle exceptions
+                    ' HTTP 401: Not authorized, check username/password if any
+                    ' HTTP 404: Not found, maybe Odisee Server URL or XML request is empty or corrupt
+                    If IsNothing(httpWebResponse) Then '.StatusCode = HttpStatusCode.HttpVersionNotSupported Then
+                        ' Init for HTTP DIGEST
+                        httpWebRequest = initHttpDigestAuth(serviceURL, username, password)
+                    Else
+                        Throw ex
+                    End If
+                End Try
+                ' Next try?
+                trycount = trycount + 1
+            End While
+            If IsNothing(httpWebResponse) Then
+                'Throw
+            End If
             Return httpWebResponse
         End Function
 
@@ -238,7 +185,7 @@ Namespace Helper
                 filepath = xmlDocument.SelectSingleNode(OdiseeConstant.REQUEST_NAME).InnerText
             End If
             ' Get response code
-            Dim status As String = HttpWebResponse.StatusDescription.ToString()
+            Dim status As String = httpWebResponse.StatusDescription.ToString()
             ' Open file handle
             Dim fileStream As FileStream = New FileStream(filepath, FileMode.Create)
             ' Buffer for reading response stream
@@ -247,7 +194,7 @@ Namespace Helper
             Dim responseStream As Stream = Nothing
             Try
                 ' Get response stream
-                responseStream = HttpWebResponse.GetResponseStream()
+                responseStream = httpWebResponse.GetResponseStream()
                 ' Read bytes and write them to file
                 Dim readCount As Integer = responseStream.Read(byteBuffer, 0, bufferSize)
                 Dim totalReadCount As Long
@@ -257,7 +204,7 @@ Namespace Helper
                     totalReadCount = totalReadCount + readCount
                 End While
                 ' Compare read byte count with content-length header
-                If totalReadCount <> HttpWebResponse.ContentLength Then
+                If totalReadCount <> httpWebResponse.ContentLength Then
                 Else
                     ' Error handling
                 End If

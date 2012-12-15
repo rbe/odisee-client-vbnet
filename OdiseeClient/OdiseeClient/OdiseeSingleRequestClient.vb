@@ -309,9 +309,9 @@ Namespace Http
             ' Send Odisee request XML document through HTTP POST
             Dim webResponse As WebResponse
             If Not IsNothing(username) And Not IsNothing(password) Then
-                webResponse = Helper.HttpPost.doPost(__xmlDoc, New Uri(serviceURL), username, password)
+                webResponse = Helper.HttpPost.doDigestAuthPost(__xmlDoc, New Uri(serviceURL), username, password)
             Else
-                webResponse = Helper.HttpPost.doPost(__xmlDoc, New Uri(serviceURL))
+                webResponse = Helper.HttpPost.doDigestAuthPost(__xmlDoc, New Uri(serviceURL))
             End If
             ' Return response from Odisee HTTP server
             Return webResponse
