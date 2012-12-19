@@ -20,15 +20,9 @@ Namespace My
         ''' <remarks></remarks>
         Private Sub MyApplication_NetworkAvailabilityChanged(ByVal sender As Object, ByVal e As NetworkAvailableEventArgs) Handles Me.NetworkAvailabilityChanged
             If e.IsNetworkAvailable() Then
-                MsgBox("Network unavailable -- disabling buttons")
-                My.Forms.OdiseeTester.makeOdiseeRequestButton.Enabled = True
                 My.Forms.OdiseeTester.sendOdiseeRequestButton.Enabled = True
-                My.Forms.OdiseeTester.chooseFolderButton.Enabled = True
             Else
-                MsgBox("Network available -- enabling buttons")
-                My.Forms.OdiseeTester.makeOdiseeRequestButton.Enabled = False
                 My.Forms.OdiseeTester.sendOdiseeRequestButton.Enabled = False
-                My.Forms.OdiseeTester.chooseFolderButton.Enabled = False
             End If
         End Sub
 

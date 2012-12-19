@@ -125,6 +125,42 @@ Namespace My
                 Me("odiseeRequestXML") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property odiseeSSL() As Boolean
+            Get
+                Return CType(Me("odiseeSSL"),Boolean)
+            End Get
+            Set
+                Me("odiseeSSL") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property odiseeHTTPAuth() As String
+            Get
+                Return CType(Me("odiseeHTTPAuth"),String)
+            End Get
+            Set
+                Me("odiseeHTTPAuth") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property odiseeNumberOfWorkerThreads() As String
+            Get
+                Return CType(Me("odiseeNumberOfWorkerThreads"),String)
+            End Get
+            Set
+                Me("odiseeNumberOfWorkerThreads") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

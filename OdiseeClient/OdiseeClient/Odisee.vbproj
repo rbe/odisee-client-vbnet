@@ -36,7 +36,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>index.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>17</ApplicationRevision>
+    <ApplicationRevision>19</ApplicationRevision>
     <ApplicationVersion>2.2.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -53,6 +53,7 @@
     <NoWarn>
     </NoWarn>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -121,6 +122,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="OdiseeHelper.Xml.vb" />
+    <Compile Include="OdiseeHelper.Desktop.vb" />
     <Compile Include="OdiseeClientSplashScreen.Designer.vb">
       <DependentUpon>OdiseeClientSplashScreen.vb</DependentUpon>
     </Compile>
@@ -129,7 +132,7 @@
     </Compile>
     <Compile Include="OdiseeSingleRequestClient.vb" />
     <Compile Include="OdiseeConstant.vb" />
-    <Compile Include="OdiseeHelper.vb" />
+    <Compile Include="OdiseeHelper.HttpPost.vb" />
     <Compile Include="OdiseeSimpleHttpClient.vb" />
     <Compile Include="OdiseeTester.vb">
       <SubType>Form</SubType>
