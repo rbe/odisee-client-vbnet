@@ -12,6 +12,8 @@ Imports System.Net
 Imports System.Xml
 Imports Odisee.Client.Http
 Imports System.Environment
+Imports System.Threading
+Imports System.ComponentModel
 
 ''' <summary>
 ''' Test requests against an Odisee server.
@@ -61,6 +63,12 @@ Public Class OdiseeTester
     ''' <remarks></remarks>
     Private Property odiseeClient As OdiseeSimpleHttpClient
 
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Property odiseeServer As String
         Set(value As String)
             odiseeServerURLTextBox.Text = value
@@ -179,6 +187,18 @@ Public Class OdiseeTester
         End Get
     End Property
 
+    ''' <summary>
+    ''' Number of requests to send to Odisee server.
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    ReadOnly Property requestSendCount As Integer
+        Get
+            Return CInt(requestSendCountTextBox.Text)
+        End Get
+    End Property
+
 #End Region
 
     ''' <summary>
@@ -188,8 +208,10 @@ Public Class OdiseeTester
     Public Sub New()
         ' Dieser Aufruf ist für den Designer erforderlich.
         InitializeComponent()
-        '
+        ' Set title, version string
         Text = "Odisee(R) Client " & My.Application.Info.Version.ToString
+        ' Set concurrency
+        odiseeNumberOfWorkerThreadsTextBox.Text = CStr(getMaxWorkers())
         ' User settings
         loadUserSettings()
     End Sub
@@ -208,7 +230,7 @@ Public Class OdiseeTester
 
 #End Region
 
-#Region "User Interface"
+#Region "User Interface Settings"
 
     ''' <summary>
     ''' Load user settings.
@@ -230,6 +252,9 @@ Public Class OdiseeTester
             saveFilename = "OdiseeClientTest.pdf"
         End If
         odiseeRequestXML = My.Settings.odiseeRequestXML
+        httpAuthMethodComboBox.SelectedItem = My.Settings.odiseeHTTPAuth
+        odiseeSSLCheckBox.Checked = My.Settings.odiseeSSL
+        odiseeNumberOfWorkerThreadsTextBox.Text = My.Settings.odiseeNumberOfWorkerThreads
     End Sub
 
     ''' <summary>
@@ -243,6 +268,9 @@ Public Class OdiseeTester
         My.Settings.odiseeOutputDirectory = savePath
         My.Settings.odiseeOutputFilename = saveFilename
         My.Settings.odiseeRequestXML = odiseeRequestXML
+        My.Settings.odiseeHTTPAuth = CStr(httpAuthMethodComboBox.SelectedItem)
+        My.Settings.odiseeSSL = odiseeSSLCheckBox.Checked
+        My.Settings.odiseeNumberOfWorkerThreads = odiseeNumberOfWorkerThreadsTextBox.Text
         'My.Settings.Reset()
         My.Settings.Save()
     End Sub
@@ -250,6 +278,10 @@ Public Class OdiseeTester
 #End Region
 
 #Region "Odisee Button Events"
+
+    Private Sub toolStripWebsiteLabel_Click(sender As System.Object, e As System.EventArgs) Handles toolStripWebsiteLabel.Click
+        System.Diagnostics.Process.Start("http://www.odisee.de")
+    End Sub
 
     ''' <summary>
     ''' Show folder chooser to select destination directory for saving generated documents locally.
@@ -322,38 +354,27 @@ Public Class OdiseeTester
             Try
                 toolStripStatusLabel.Text = "Sending request..."
                 toolStripProgressBar.Value = 50
-                ' Create Odisee client through factory using a service URL and username/password for HTTP BASIC authentication
-                odiseeClient = OdiseeSimpleHttpClient.createClient(odiseeGenerateDocumentURI, username, password)
-                ' Create a first request for a certain template
-                Dim request1 As XmlElement = odiseeClient.createRequest(template)
-                ' Parse XML from textbox
-                odiseeClient.xmlDoc.LoadXml(odiseeRequestXML)
-                ' Process reponse
-                Dim webResponse As HttpWebResponse
-                If timeout > 0 Then
-                    webResponse = odiseeClient.process(timeout)
-                Else
-                    webResponse = odiseeClient.process()
-                End If
-                If Not IsNothing(webResponse) Then
-                    If webResponse.ContentLength > 0 Then
-                        Dim fullPath As String = savePath & "\" & saveFilename
-                        Helper.HttpPost.saveDocument(odiseeClient.xmlDoc, webResponse, fullPath)
-                        Try
-                            ' Save document to disk
-                            Dim process As Process = System.Diagnostics.Process.Start(fullPath)
-                            toolStripStatusLabel.Text = "Opening generated document..."
-                        Catch ex As Exception
-                            MsgBox("Saved " & webResponse.ContentLength & " bytes to " & fullPath)
-                        End Try
-                    Else
-                        MsgBox("Sorry, got no result")
-                    End If
-                Else
-                    MsgBox("Sorry, got invalid response")
-                End If
                 '
-                webResponse.Close()
+                Dim maxWorkers As Integer = getMaxWorkers()
+                Dim _availWorkerThreads As Integer
+                Dim _completionPortThreads As Integer
+                ThreadPool.SetMaxThreads(requestSendCount, requestSendCount * 2)
+                ThreadPool.GetAvailableThreads(_availWorkerThreads, _completionPortThreads)
+                logTextBox.AppendText(String.Format("{0} Odisee workers, available threads {1}, async I/O: {2}" & vbLf, maxWorkers, _availWorkerThreads, _completionPortThreads))
+                ' Set maximum connection limit (default is 2)
+                ' http://stackoverflow.com/questions/866350/how-can-i-programmatically-remove-the-2-connection-limit-in-webclient
+                ServicePointManager.DefaultConnectionLimit = getMaxWorkers()
+                logTextBox.AppendText(String.Format("Maximum connection limit {0}" & vbLf, System.Net.ServicePointManager.DefaultConnectionLimit))
+                ' Distribute requestes across all workers
+                Dim odiseeWorkerStates As New List(Of MyState)
+                For i = 1 To maxWorkers
+                    odiseeWorkerStates.Add(New MyState("OdiseeWorker" & i, makeOdiseeClient(), timeout, CStr(httpAuthMethodComboBox.SelectedItem), savePath, saveFilename))
+                Next
+                For requestNumber As Integer = 1 To requestSendCount
+                    ' Send request through worker
+                    ThreadPool.QueueUserWorkItem(New WaitCallback(AddressOf sendRequest), odiseeWorkerStates.Item(requestNumber Mod maxWorkers))
+                Next
+                ' Update progress bar
                 toolStripStatusLabel.Text = "Success!"
                 toolStripProgressBar.Value = 100
             Catch ex As Exception
@@ -366,10 +387,139 @@ Public Class OdiseeTester
         End If
     End Sub
 
-#End Region
+    ''' <summary>
+    ''' Make an Odisee client instance.
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function makeOdiseeClient() As OdiseeSimpleHttpClient
+        ' Create Odisee client through factory using a service URL and username/password for HTTP BASIC authentication
+        odiseeClient = OdiseeSimpleHttpClient.createClient(odiseeGenerateDocumentURI, username, password)
+        ' Create a first request for a certain template
+        odiseeClient.createRequest(template)
+        ' Parse XML from textbox
+        odiseeClient.xmlDoc.LoadXml(odiseeRequestXML)
+        Return odiseeClient
+    End Function
 
-    Private Sub toolStripWebsiteLabel_Click(sender As System.Object, e As System.EventArgs) Handles toolStripWebsiteLabel.Click
-        System.Diagnostics.Process.Start("http://www.odisee.de")
+    ''' <summary>
+    ''' Calculate maximum number of worker threads.
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function getMaxWorkers() As Integer
+        Dim procCount As Integer = Environment.ProcessorCount * 2
+        Dim concurrentCount As Integer = CInt(odiseeNumberOfWorkerThreadsTextBox.Text)
+        Return Math.Max(procCount, concurrentCount)
+    End Function
+
+    ' http://msdn.microsoft.com/query/dev10.query?appId=Dev10IDEF1
+    Delegate Sub SetTextCallback([text] As String)
+
+    Private Sub AppendText(ByVal [text] As String)
+        ' InvokeRequired required compares the thread ID of the
+        ' calling thread to the thread ID of the creating thread.
+        ' If these threads are different, it returns true.
+        If Me.logTextBox.InvokeRequired Then
+            Dim d As New SetTextCallback(AddressOf AppendText)
+            Me.Invoke(d, New Object() {[text]})
+        Else
+            Me.logTextBox.AppendText([text])
+        End If
     End Sub
+
+    Private Class MyState
+
+        Public ident As String
+
+        Public odiseeClient As OdiseeSimpleHttpClient
+        Public httpAuthMethod As String
+        Public timeout As Integer
+
+        Public requestNumber As Integer
+
+        Public savePath As String
+        Public saveFilename As String
+
+        Public Sub New(ident As String, odiseeClient As OdiseeSimpleHttpClient, timeout As Integer, httpAuthMethod As String, savePath As String, saveFilename As String)
+            Me.ident = ident
+            Me.odiseeClient = odiseeClient
+            Me.timeout = timeout
+            Me.httpAuthMethod = httpAuthMethod
+            Me.savePath = savePath & "\" & ident
+            ' Create destination directory for worker
+            Directory.CreateDirectory(Me.savePath)
+            Me.saveFilename = saveFilename
+            Me.requestNumber = 0
+        End Sub
+
+    End Class
+
+    ''' <summary>
+    ''' Send an Odisee request.
+    ''' </summary>
+    ''' <param name="state"></param>
+    ''' <remarks></remarks>
+    Private Sub sendRequest(state As Object)
+        Dim myState As MyState = CType(state, MyState)
+        Dim stopWatch As Stopwatch = New Stopwatch()
+        Dim webResponse As HttpWebResponse
+        SyncLock myState
+            stopWatch.Start()
+            Try
+                myState.requestNumber = myState.requestNumber + 1
+                ' Process request
+                If myState.timeout > 0 Then
+                    webResponse = myState.odiseeClient.process(myState.timeout, myState.httpAuthMethod)
+                Else
+                    webResponse = myState.odiseeClient.process(0, myState.httpAuthMethod)
+                End If
+                Dim contentLength As Long
+                If Not IsNothing(webResponse) Then
+                    ' Save document
+                    contentLength = webResponse.ContentLength
+                    If contentLength > 0 Then
+                        Dim fullPath As String = myState.savePath & "\" & CStr(myState.requestNumber) & "_" & myState.saveFilename
+                        Helper.HttpPost.saveDocument(myState.odiseeClient.xmlDoc, webResponse, fullPath)
+                    Else
+                        Me.AppendText(String.Format("{0}: {1} sorry, got no result for request #{2}" & vbLf, Date.Now, myState.ident, myState.requestNumber))
+                    End If
+                    ' Close response
+                    webResponse.Close()
+                Else
+                    Me.AppendText(String.Format("{0}: {1} sorry, got invalid response for request #{2}" & vbLf, Date.Now, myState.ident, myState.requestNumber))
+                End If
+            Catch ex As WebException
+                If Not IsNothing(ex.Response) Then
+                    Dim httpWebResponse As HttpWebResponse = CType(ex.Response, HttpWebResponse)
+                    Me.AppendText(String.Format("{0}: {1} got HTTP error {3} for job {2}" & vbLf, Date.Now, myState.ident, myState.requestNumber, httpWebResponse.StatusCode))
+                Else
+                    Me.AppendText(String.Format("{0}: {1} job {2} failed with message: {3}" & vbLf, Date.Now, myState.ident, myState.requestNumber, ex.Message))
+                End If
+            Finally
+                stopWatch.Stop()
+                Me.AppendText(String.Format("{0}: {1} finished job #{2} in {3} ms" & vbLf, Date.Now, myState.ident, myState.requestNumber, stopWatch.ElapsedMilliseconds))
+            End Try
+        End SyncLock
+    End Sub
+
+    ''' <summary>
+    ''' Open document (e.g. PDF with Adobe Reader).
+    ''' </summary>
+    ''' <param name="fullPath"></param>
+    ''' <remarks></remarks>
+    Private Sub openDocument(fullPath As String)
+        If openDocumentCheckbox.Checked Then
+            Try
+                ' Save document to disk
+                Dim process As Process = System.Diagnostics.Process.Start(fullPath)
+                toolStripStatusLabel.Text = "Opening generated document..."
+            Catch ex As Exception
+                MsgBox("Cannot open document " & fullPath)
+            End Try
+        End If
+    End Sub
+
+#End Region
 
 End Class

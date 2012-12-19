@@ -44,8 +44,17 @@ Partial Class OdiseeTester
         Me.savePathTextBox = New System.Windows.Forms.TextBox()
         Me.odiseeSettingsGroupBox = New System.Windows.Forms.GroupBox()
         Me.odiseeLogoPictureBox = New System.Windows.Forms.PictureBox()
+        Me.timeoutInSecondsLabel = New System.Windows.Forms.Label()
+        Me.timeoutInSecondsTextBox = New System.Windows.Forms.TextBox()
         Me.odiseeInputGroupBox = New System.Windows.Forms.GroupBox()
+        Me.generateRequestCountTextBox = New System.Windows.Forms.TextBox()
+        Me.generateRequestCountLabel = New System.Windows.Forms.Label()
         Me.odiseeOutputGroupBox = New System.Windows.Forms.GroupBox()
+        Me.odiseeNumberOfWorkerThreadsLabel = New System.Windows.Forms.Label()
+        Me.odiseeNumberOfWorkerThreadsTextBox = New System.Windows.Forms.TextBox()
+        Me.openDocumentCheckbox = New System.Windows.Forms.CheckBox()
+        Me.requestSendCountLabel = New System.Windows.Forms.Label()
+        Me.requestSendCountTextBox = New System.Windows.Forms.TextBox()
         Me.saveFilenameTextBox = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.toolbarStatusStrip = New System.Windows.Forms.StatusStrip()
@@ -53,8 +62,10 @@ Partial Class OdiseeTester
         Me.toolStripStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.toolStrip = New System.Windows.Forms.ToolStrip()
         Me.toolStripWebsiteLabel = New System.Windows.Forms.ToolStripLabel()
-        Me.timeoutInSecondsTextBox = New System.Windows.Forms.TextBox()
-        Me.timeoutInSecondsLabel = New System.Windows.Forms.Label()
+        Me.httpAuthLabel = New System.Windows.Forms.Label()
+        Me.httpAuthMethodComboBox = New System.Windows.Forms.ComboBox()
+        Me.httpAuth2Label = New System.Windows.Forms.Label()
+        Me.odiseeSSLCheckBox = New System.Windows.Forms.CheckBox()
         Me.odiseeSettingsGroupBox.SuspendLayout()
         CType(Me.odiseeLogoPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.odiseeInputGroupBox.SuspendLayout()
@@ -75,7 +86,6 @@ Partial Class OdiseeTester
         'odiseeRequestXMLTextBox
         '
         Me.odiseeRequestXMLTextBox.AutoCompleteCustomSource.AddRange(New String() {"odisee", "request"})
-        Me.odiseeRequestXMLTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.odiseeRequestXMLTextBox.BackColor = System.Drawing.SystemColors.Window
         Me.odiseeRequestXMLTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.odiseeRequestXMLTextBox.Font = New System.Drawing.Font("Courier New", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -112,6 +122,7 @@ Partial Class OdiseeTester
         Me.templateComboBox.Name = "templateComboBox"
         Me.templateComboBox.Size = New System.Drawing.Size(213, 21)
         Me.templateComboBox.TabIndex = 5
+        Me.templateComboBox.Text = "HalloOdisee"
         '
         'odiseeTemplatesLinkLabel
         '
@@ -231,8 +242,18 @@ Partial Class OdiseeTester
         '
         'odiseeSettingsGroupBox
         '
+        Me.odiseeSettingsGroupBox.Controls.Add(Me.odiseeSSLCheckBox)
+        Me.odiseeSettingsGroupBox.Controls.Add(Me.httpAuth2Label)
+        Me.odiseeSettingsGroupBox.Controls.Add(Me.httpAuthMethodComboBox)
+        Me.odiseeSettingsGroupBox.Controls.Add(Me.httpAuthLabel)
+        Me.odiseeSettingsGroupBox.Controls.Add(Me.odiseeNumberOfWorkerThreadsLabel)
         Me.odiseeSettingsGroupBox.Controls.Add(Me.odiseeLogoPictureBox)
+        Me.odiseeSettingsGroupBox.Controls.Add(Me.odiseeNumberOfWorkerThreadsTextBox)
         Me.odiseeSettingsGroupBox.Controls.Add(Me.Label2)
+        Me.odiseeSettingsGroupBox.Controls.Add(Me.timeoutInSecondsLabel)
+        Me.odiseeSettingsGroupBox.Controls.Add(Me.requestSendCountLabel)
+        Me.odiseeSettingsGroupBox.Controls.Add(Me.requestSendCountTextBox)
+        Me.odiseeSettingsGroupBox.Controls.Add(Me.timeoutInSecondsTextBox)
         Me.odiseeSettingsGroupBox.Controls.Add(Me.passwordTextBox)
         Me.odiseeSettingsGroupBox.Controls.Add(Me.Label1)
         Me.odiseeSettingsGroupBox.Controls.Add(Me.usernameTextBox)
@@ -242,7 +263,7 @@ Partial Class OdiseeTester
         Me.odiseeSettingsGroupBox.Controls.Add(Me.odiseeServerURLTextBox)
         Me.odiseeSettingsGroupBox.Location = New System.Drawing.Point(12, 28)
         Me.odiseeSettingsGroupBox.Name = "odiseeSettingsGroupBox"
-        Me.odiseeSettingsGroupBox.Size = New System.Drawing.Size(980, 86)
+        Me.odiseeSettingsGroupBox.Size = New System.Drawing.Size(980, 88)
         Me.odiseeSettingsGroupBox.TabIndex = 21
         Me.odiseeSettingsGroupBox.TabStop = False
         Me.odiseeSettingsGroupBox.Text = "Odisee Server Settings"
@@ -259,26 +280,61 @@ Partial Class OdiseeTester
         Me.odiseeLogoPictureBox.TabIndex = 17
         Me.odiseeLogoPictureBox.TabStop = False
         '
+        'timeoutInSecondsLabel
+        '
+        Me.timeoutInSecondsLabel.AutoSize = True
+        Me.timeoutInSecondsLabel.Location = New System.Drawing.Point(739, 16)
+        Me.timeoutInSecondsLabel.Name = "timeoutInSecondsLabel"
+        Me.timeoutInSecondsLabel.Size = New System.Drawing.Size(95, 13)
+        Me.timeoutInSecondsLabel.TabIndex = 24
+        Me.timeoutInSecondsLabel.Text = "HTTP timeout/sec"
+        '
+        'timeoutInSecondsTextBox
+        '
+        Me.timeoutInSecondsTextBox.Location = New System.Drawing.Point(840, 13)
+        Me.timeoutInSecondsTextBox.Name = "timeoutInSecondsTextBox"
+        Me.timeoutInSecondsTextBox.Size = New System.Drawing.Size(38, 20)
+        Me.timeoutInSecondsTextBox.TabIndex = 23
+        Me.timeoutInSecondsTextBox.Text = "20"
+        '
         'odiseeInputGroupBox
         '
         Me.odiseeInputGroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.odiseeInputGroupBox.Controls.Add(Me.generateRequestCountTextBox)
+        Me.odiseeInputGroupBox.Controls.Add(Me.generateRequestCountLabel)
         Me.odiseeInputGroupBox.Controls.Add(Me.mergeDocumentTextBox)
         Me.odiseeInputGroupBox.Controls.Add(Me.mergeDocumentCheckBox)
         Me.odiseeInputGroupBox.Controls.Add(Me.odiseeTemplatesLinkLabel)
         Me.odiseeInputGroupBox.Controls.Add(Me.templateComboBox)
         Me.odiseeInputGroupBox.Controls.Add(Me.makeOdiseeRequestButton)
         Me.odiseeInputGroupBox.Controls.Add(Me.odiseeRequestXMLTextBox)
-        Me.odiseeInputGroupBox.Location = New System.Drawing.Point(12, 120)
+        Me.odiseeInputGroupBox.Location = New System.Drawing.Point(12, 122)
         Me.odiseeInputGroupBox.Name = "odiseeInputGroupBox"
-        Me.odiseeInputGroupBox.Size = New System.Drawing.Size(980, 347)
+        Me.odiseeInputGroupBox.Size = New System.Drawing.Size(980, 345)
         Me.odiseeInputGroupBox.TabIndex = 22
         Me.odiseeInputGroupBox.TabStop = False
         Me.odiseeInputGroupBox.Text = "Input for Odisee Server"
         '
+        'generateRequestCountTextBox
+        '
+        Me.generateRequestCountTextBox.Location = New System.Drawing.Point(792, 45)
+        Me.generateRequestCountTextBox.Name = "generateRequestCountTextBox"
+        Me.generateRequestCountTextBox.Size = New System.Drawing.Size(38, 20)
+        Me.generateRequestCountTextBox.TabIndex = 23
+        Me.generateRequestCountTextBox.Text = "1"
+        '
+        'generateRequestCountLabel
+        '
+        Me.generateRequestCountLabel.AutoSize = True
+        Me.generateRequestCountLabel.Location = New System.Drawing.Point(732, 48)
+        Me.generateRequestCountLabel.Name = "generateRequestCountLabel"
+        Me.generateRequestCountLabel.Size = New System.Drawing.Size(54, 13)
+        Me.generateRequestCountLabel.TabIndex = 22
+        Me.generateRequestCountLabel.Text = "#requests"
+        '
         'odiseeOutputGroupBox
         '
-        Me.odiseeOutputGroupBox.Controls.Add(Me.timeoutInSecondsLabel)
-        Me.odiseeOutputGroupBox.Controls.Add(Me.timeoutInSecondsTextBox)
+        Me.odiseeOutputGroupBox.Controls.Add(Me.openDocumentCheckbox)
         Me.odiseeOutputGroupBox.Controls.Add(Me.saveFilenameTextBox)
         Me.odiseeOutputGroupBox.Controls.Add(Me.Label3)
         Me.odiseeOutputGroupBox.Controls.Add(Me.savePathTextBox)
@@ -292,9 +348,53 @@ Partial Class OdiseeTester
         Me.odiseeOutputGroupBox.TabStop = False
         Me.odiseeOutputGroupBox.Text = "Output from Odisee Server"
         '
+        'odiseeNumberOfWorkerThreadsLabel
+        '
+        Me.odiseeNumberOfWorkerThreadsLabel.AutoSize = True
+        Me.odiseeNumberOfWorkerThreadsLabel.Location = New System.Drawing.Point(705, 63)
+        Me.odiseeNumberOfWorkerThreadsLabel.Name = "odiseeNumberOfWorkerThreadsLabel"
+        Me.odiseeNumberOfWorkerThreadsLabel.Size = New System.Drawing.Size(129, 13)
+        Me.odiseeNumberOfWorkerThreadsLabel.TabIndex = 29
+        Me.odiseeNumberOfWorkerThreadsLabel.Text = "Number of worker threads"
+        '
+        'odiseeNumberOfWorkerThreadsTextBox
+        '
+        Me.odiseeNumberOfWorkerThreadsTextBox.Location = New System.Drawing.Point(840, 60)
+        Me.odiseeNumberOfWorkerThreadsTextBox.Name = "odiseeNumberOfWorkerThreadsTextBox"
+        Me.odiseeNumberOfWorkerThreadsTextBox.Size = New System.Drawing.Size(38, 20)
+        Me.odiseeNumberOfWorkerThreadsTextBox.TabIndex = 28
+        Me.odiseeNumberOfWorkerThreadsTextBox.Text = "1"
+        '
+        'openDocumentCheckbox
+        '
+        Me.openDocumentCheckbox.AutoSize = True
+        Me.openDocumentCheckbox.Location = New System.Drawing.Point(548, 22)
+        Me.openDocumentCheckbox.Name = "openDocumentCheckbox"
+        Me.openDocumentCheckbox.Size = New System.Drawing.Size(52, 17)
+        Me.openDocumentCheckbox.TabIndex = 27
+        Me.openDocumentCheckbox.Text = "Open"
+        Me.openDocumentCheckbox.UseVisualStyleBackColor = True
+        '
+        'requestSendCountLabel
+        '
+        Me.requestSendCountLabel.AutoSize = True
+        Me.requestSendCountLabel.Location = New System.Drawing.Point(717, 40)
+        Me.requestSendCountLabel.Name = "requestSendCountLabel"
+        Me.requestSendCountLabel.Size = New System.Drawing.Size(117, 13)
+        Me.requestSendCountLabel.TabIndex = 26
+        Me.requestSendCountLabel.Text = "Repeat request # times"
+        '
+        'requestSendCountTextBox
+        '
+        Me.requestSendCountTextBox.Location = New System.Drawing.Point(840, 37)
+        Me.requestSendCountTextBox.Name = "requestSendCountTextBox"
+        Me.requestSendCountTextBox.Size = New System.Drawing.Size(38, 20)
+        Me.requestSendCountTextBox.TabIndex = 25
+        Me.requestSendCountTextBox.Text = "1"
+        '
         'saveFilenameTextBox
         '
-        Me.saveFilenameTextBox.Location = New System.Drawing.Point(374, 19)
+        Me.saveFilenameTextBox.Location = New System.Drawing.Point(365, 19)
         Me.saveFilenameTextBox.Name = "saveFilenameTextBox"
         Me.saveFilenameTextBox.Size = New System.Drawing.Size(176, 20)
         Me.saveFilenameTextBox.TabIndex = 11
@@ -305,9 +405,9 @@ Partial Class OdiseeTester
         Me.Label3.AutoSize = True
         Me.Label3.Location = New System.Drawing.Point(310, 22)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(58, 13)
+        Me.Label3.Size = New System.Drawing.Size(49, 13)
         Me.Label3.TabIndex = 8
-        Me.Label3.Text = "Dateiname"
+        Me.Label3.Text = "Filename"
         '
         'toolbarStatusStrip
         '
@@ -347,22 +447,44 @@ Partial Class OdiseeTester
         Me.toolStripWebsiteLabel.Size = New System.Drawing.Size(87, 22)
         Me.toolStripWebsiteLabel.Text = "www.odisee.de"
         '
-        'timeoutInSecondsTextBox
+        'httpAuthLabel
         '
-        Me.timeoutInSecondsTextBox.Location = New System.Drawing.Point(794, 19)
-        Me.timeoutInSecondsTextBox.Name = "timeoutInSecondsTextBox"
-        Me.timeoutInSecondsTextBox.Size = New System.Drawing.Size(35, 20)
-        Me.timeoutInSecondsTextBox.TabIndex = 23
-        Me.timeoutInSecondsTextBox.Text = "20"
+        Me.httpAuthLabel.AutoSize = True
+        Me.httpAuthLabel.Location = New System.Drawing.Point(474, 42)
+        Me.httpAuthLabel.Name = "httpAuthLabel"
+        Me.httpAuthLabel.Size = New System.Drawing.Size(36, 13)
+        Me.httpAuthLabel.TabIndex = 30
+        Me.httpAuthLabel.Text = "HTTP"
         '
-        'timeoutInSecondsLabel
+        'httpAuthMethodComboBox
         '
-        Me.timeoutInSecondsLabel.AutoSize = True
-        Me.timeoutInSecondsLabel.Location = New System.Drawing.Point(689, 22)
-        Me.timeoutInSecondsLabel.Name = "timeoutInSecondsLabel"
-        Me.timeoutInSecondsLabel.Size = New System.Drawing.Size(99, 13)
-        Me.timeoutInSecondsLabel.TabIndex = 24
-        Me.timeoutInSecondsLabel.Text = "Timeout in seconds"
+        Me.httpAuthMethodComboBox.FormattingEnabled = True
+        Me.httpAuthMethodComboBox.Items.AddRange(New Object() {"BASIC", "DIGEST"})
+        Me.httpAuthMethodComboBox.Location = New System.Drawing.Point(516, 39)
+        Me.httpAuthMethodComboBox.Name = "httpAuthMethodComboBox"
+        Me.httpAuthMethodComboBox.Size = New System.Drawing.Size(67, 21)
+        Me.httpAuthMethodComboBox.TabIndex = 31
+        Me.httpAuthMethodComboBox.Text = "BASIC"
+        '
+        'httpAuth2Label
+        '
+        Me.httpAuth2Label.AutoSize = True
+        Me.httpAuth2Label.Location = New System.Drawing.Point(589, 44)
+        Me.httpAuth2Label.Name = "httpAuth2Label"
+        Me.httpAuth2Label.Size = New System.Drawing.Size(29, 13)
+        Me.httpAuth2Label.TabIndex = 32
+        Me.httpAuth2Label.Text = "Auth"
+        '
+        'odiseeSSLCheckBox
+        '
+        Me.odiseeSSLCheckBox.AutoSize = True
+        Me.odiseeSSLCheckBox.Enabled = False
+        Me.odiseeSSLCheckBox.Location = New System.Drawing.Point(516, 66)
+        Me.odiseeSSLCheckBox.Name = "odiseeSSLCheckBox"
+        Me.odiseeSSLCheckBox.Size = New System.Drawing.Size(46, 17)
+        Me.odiseeSSLCheckBox.TabIndex = 33
+        Me.odiseeSSLCheckBox.Text = "SSL"
+        Me.odiseeSSLCheckBox.UseVisualStyleBackColor = True
         '
         'OdiseeTester
         '
@@ -427,5 +549,16 @@ Partial Class OdiseeTester
     Friend WithEvents toolStripWebsiteLabel As System.Windows.Forms.ToolStripLabel
     Friend WithEvents timeoutInSecondsLabel As System.Windows.Forms.Label
     Friend WithEvents timeoutInSecondsTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents generateRequestCountTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents generateRequestCountLabel As System.Windows.Forms.Label
+    Friend WithEvents requestSendCountLabel As System.Windows.Forms.Label
+    Friend WithEvents requestSendCountTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents openDocumentCheckbox As System.Windows.Forms.CheckBox
+    Friend WithEvents odiseeNumberOfWorkerThreadsLabel As System.Windows.Forms.Label
+    Friend WithEvents odiseeNumberOfWorkerThreadsTextBox As System.Windows.Forms.TextBox
+    Friend WithEvents httpAuthMethodComboBox As System.Windows.Forms.ComboBox
+    Friend WithEvents httpAuthLabel As System.Windows.Forms.Label
+    Friend WithEvents httpAuth2Label As System.Windows.Forms.Label
+    Friend WithEvents odiseeSSLCheckBox As System.Windows.Forms.CheckBox
 
 End Class
