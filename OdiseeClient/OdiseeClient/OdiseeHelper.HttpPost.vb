@@ -58,6 +58,8 @@ Namespace Helper
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function doBasicAuthPost(ByRef xmlDocument As XmlDocument, ByRef serviceURL As Uri, Optional ByVal username As String = Nothing, Optional ByVal password As String = Nothing, Optional ByVal timeout As Integer = 30000) As HttpWebResponse
+            Dim trycount As Integer = 0
+            Dim httpWebResponse As HttpWebResponse = Nothing
             ' Create instance of WebRequest
             Dim httpWebRequest As HttpWebRequest = makeHttpWebRequest(serviceURL, username, password)
             httpWebRequest.Method = "POST"
@@ -82,13 +84,24 @@ Namespace Helper
                 stream.Close()
                 stream.Dispose()
                 ' Return response
-                Return CType(httpWebRequest.GetResponse(), HttpWebResponse)
-            Catch ex As Exception
-                ' Handle exceptions
-                ' HTTP 401: Not authorized, check username/password if any
-                ' HTTP 404: Not found, maybe Odisee Server URL or XML request is empty or corrupt
-                Throw ex
+                httpWebResponse = CType(httpWebRequest.GetResponse(), HttpWebResponse)
+            Catch ex As WebException
+                If Not IsNothing(ex.Response) Then
+                    ' Handle HTTP error
+                    httpWebResponse = CType(ex.Response, HttpWebResponse)
+                    ' HTTP 401: Not authorized, check username/password if any
+                    If httpWebResponse.StatusCode = HttpStatusCode.Unauthorized Then
+                        Throw ex
+                    End If
+                    ' HTTP 404: Not found, maybe Odisee Server URL or XML request is empty or corrupt
+                    If httpWebResponse.StatusCode = HttpStatusCode.NotFound Then
+                        Throw ex
+                    End If
+                Else
+                    Throw ex
+                End If
             End Try
+            Return httpWebResponse
         End Function
 
         ''' <summary>
@@ -152,13 +165,24 @@ Namespace Helper
                     ' Do not: stream.Close() and stream.Dispose(), subsequent requests will die at .GetRequestStream()
                     ' Return response
                     httpWebResponse = CType(httpWebRequest.GetResponse(), HttpWebResponse)
-                Catch ex As Exception
-                    ' Handle exceptions
-                    ' HTTP 401: Not authorized, check username/password if any
-                    ' HTTP 404: Not found, maybe Odisee Server URL or XML request is empty or corrupt
-                    If IsNothing(httpWebResponse) Then '.StatusCode = HttpStatusCode.HttpVersionNotSupported Then
-                        ' Init for HTTP DIGEST
-                        httpWebRequest = initHttpDigestAuth(serviceURL, username, password)
+                Catch ex As WebException
+                    If Not IsNothing(ex.Response) Then
+                        ' Handle HTTP error
+                        httpWebResponse = CType(ex.Response, HttpWebResponse)
+                        ' HTTP 401: Not authorized, check username/password if any
+                        If httpWebResponse.StatusCode = HttpStatusCode.Unauthorized Then
+                            Throw ex
+                        End If
+                        ' HTTP 404: Not found, maybe Odisee Server URL or XML request is empty or corrupt
+                        If httpWebResponse.StatusCode = HttpStatusCode.NotFound Then
+                            Throw ex
+                        End If
+                        ' HTTP 505
+                        If httpWebResponse.StatusCode = HttpStatusCode.HttpVersionNotSupported Then
+                            ' Init for HTTP DIGEST
+                            httpWebRequest = initHttpDigestAuth(serviceURL, username, password)
+                            trycount = trycount - 1
+                        End If
                     Else
                         Throw ex
                     End If
@@ -166,9 +190,6 @@ Namespace Helper
                 ' Next try?
                 trycount = trycount + 1
             End While
-            If IsNothing(httpWebResponse) Then
-                'Throw
-            End If
             Return httpWebResponse
         End Function
 
