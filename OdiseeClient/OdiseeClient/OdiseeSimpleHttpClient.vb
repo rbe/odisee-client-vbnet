@@ -97,11 +97,12 @@ Namespace Http
 
 #End Region
 
-#Region "Odisee Client Factory Methods"
+#Region "Odisee Client Factory"
 
-        '
-        ' Private constructor (used with factory methods).
-        '
+        ''' <summary>
+        ''' Private constructor (used with factory methods).
+        ''' </summary>
+        ''' <remarks></remarks>
         Private Sub New()
             ' Create fresh XML document and add root element
             __xmlDoc = New XmlDocument()
@@ -109,18 +110,23 @@ Namespace Http
             __xmlDoc.AppendChild(xmlRoot)
         End Sub
 
-        '
-        ' Factory method for creating a Odisee XML client.
-        '
+        ''' <summary>
+        ''' Factory method for creating a Odisee XML client.
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Shared Function createClient() As OdiseeSimpleHttpClient
             Dim odiseeClient As OdiseeSimpleHttpClient = New OdiseeSimpleHttpClient()
             ' Return instance of OdiseeClient
             Return odiseeClient
         End Function
 
-        '
-        ' Factory method for creating a Odisee XML client.
-        '
+        ''' <summary>
+        ''' Factory method for creating a Odisee XML client.
+        ''' </summary>
+        ''' <param name="serviceURL"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Shared Function createClient(ByVal serviceURL As String) As OdiseeSimpleHttpClient
             Dim odiseeClient As OdiseeSimpleHttpClient = New OdiseeSimpleHttpClient()
             ' Set service URL
@@ -129,9 +135,13 @@ Namespace Http
             Return odiseeClient
         End Function
 
-        '
-        ' Factory method for creating a Odisee XML client.
-        '
+        ''' <summary>
+        ''' Factory method for creating a Odisee XML client.
+        ''' </summary>
+        ''' <param name="serviceURL"></param>
+        ''' <param name="authKey"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Shared Function createClient(ByVal serviceURL As String, ByVal authKey As String) As OdiseeSimpleHttpClient
             Dim odiseeClient As OdiseeSimpleHttpClient = New OdiseeSimpleHttpClient()
             ' Set service URL
@@ -142,9 +152,14 @@ Namespace Http
             Return odiseeClient
         End Function
 
-        '
-        ' Factory method for creating a Odisee XML client.
-        '
+        ''' <summary>
+        ''' Factory method for creating a Odisee XML client.
+        ''' </summary>
+        ''' <param name="serviceURL"></param>
+        ''' <param name="username"></param>
+        ''' <param name="password"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Shared Function createClient(ByVal serviceURL As String, ByVal username As String, ByVal password As String) As OdiseeSimpleHttpClient
             Dim odiseeClient As OdiseeSimpleHttpClient = New OdiseeSimpleHttpClient()
             ' Set service URL
@@ -158,11 +173,11 @@ Namespace Http
 
 #End Region
 
-#Region "Odisee Request API methods"
+#Region "Odisee Client API"
 
         ''' <summary>
-        ''' Post process, merge the resulting document with another. Adds a &lt;action type="merge-with"> element to &lt;post-process>,
-        ''' XPath //request[last()]/post-process/action.
+        ''' Post process, merge the resulting document with another.
+        ''' Adds a &lt;action type="merge-with"> element to &lt;post-process>, XPath //request[last()]/post-process/action.
         ''' </summary>
         ''' <param name="requestElement"></param>
         ''' <param name="filepath"></param>
