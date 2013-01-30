@@ -40,7 +40,7 @@ Namespace Helper
         End Function
 
         ''' <summary>
-        ''' Append an instruction to //request/instructions element.
+        ''' Append an instruction to //request/instructions[last()] element.
         ''' </summary>
         ''' <param name="requestElement">XmlElement</param>
         ''' <param name="xmlElement">The XmlElement to append to requestElement's last instruction element</param>
