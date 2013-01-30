@@ -130,10 +130,10 @@
     <Compile Include="OdiseeClientSplashScreen.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OdiseeSingleRequestClient.vb" />
+    <Compile Include="OdiseeSimpleClient.vb" />
     <Compile Include="OdiseeConstant.vb" />
     <Compile Include="OdiseeHelper.HttpPost.vb" />
-    <Compile Include="OdiseeSimpleHttpClient.vb" />
+    <Compile Include="OdiseeClient.vb" />
     <Compile Include="OdiseeTester.vb">
       <SubType>Form</SubType>
     </Compile>
