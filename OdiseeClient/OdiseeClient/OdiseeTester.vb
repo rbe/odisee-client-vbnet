@@ -10,7 +10,6 @@ Option Explicit On
 Imports System.IO
 Imports System.Net
 Imports System.Xml
-Imports Odisee.Client.Http
 Imports System.Environment
 Imports System.Threading
 Imports System.ComponentModel
@@ -61,7 +60,7 @@ Public Class OdiseeTester
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Private Property odiseeClient As OdiseeSimpleHttpClient
+    Private Property odiseeClient As OdiseeClient
 
     ''' <summary>
     ''' 
@@ -314,7 +313,7 @@ Public Class OdiseeTester
     ''' <remarks></remarks>
     Private Sub makeOdiseeRequestButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles makeOdiseeRequestButton.Click
         ' Create Odisee client through factory
-        odiseeClient = OdiseeSimpleHttpClient.createClient()
+        odiseeClient = OdiseeClient.createClient()
         ' Create a first request for a certain template
         Dim request1 As XmlElement = odiseeClient.createRequest(template)
         ' Set some values using the fluent API...
@@ -392,9 +391,9 @@ Public Class OdiseeTester
     ''' </summary>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Private Function makeOdiseeClient() As OdiseeSimpleHttpClient
+    Private Function makeOdiseeClient() As OdiseeClient
         ' Create Odisee client through factory using a service URL and username/password for HTTP BASIC authentication
-        odiseeClient = OdiseeSimpleHttpClient.createClient(odiseeGenerateDocumentURI, username, password)
+        odiseeClient = OdiseeClient.createClient(odiseeGenerateDocumentURI, username, password)
         ' Create a first request for a certain template
         odiseeClient.createRequest(template)
         ' Parse XML from textbox
@@ -428,11 +427,15 @@ Public Class OdiseeTester
         End If
     End Sub
 
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <remarks></remarks>
     Private Class MyState
 
         Public ident As String
 
-        Public odiseeClient As OdiseeSimpleHttpClient
+        Public odiseeClient As OdiseeClient
         Public httpAuthMethod As String
         Public timeout As Integer
 
@@ -441,7 +444,7 @@ Public Class OdiseeTester
         Public savePath As String
         Public saveFilename As String
 
-        Public Sub New(ident As String, odiseeClient As OdiseeSimpleHttpClient, timeout As Integer, httpAuthMethod As String, savePath As String, saveFilename As String)
+        Public Sub New(ident As String, odiseeClient As OdiseeClient, timeout As Integer, httpAuthMethod As String, savePath As String, saveFilename As String)
             Me.ident = ident
             Me.odiseeClient = odiseeClient
             Me.timeout = timeout
