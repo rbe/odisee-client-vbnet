@@ -10,9 +10,9 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyTitle("Odisee Client")> 
 <Assembly: AssemblyDescription("Client for Odisee Server")> 
-<Assembly: AssemblyCompany("Odisee")> 
-<Assembly: AssemblyProduct("Odisee Client")> 
-<Assembly: AssemblyCopyright("Copyright © 2005-2013 art of coding UG")> 
+<Assembly: AssemblyCompany("art of coding UG")> 
+<Assembly: AssemblyProduct("Odisee(R)")> 
+<Assembly: AssemblyCopyright("Copyright © 2005-2014 art of coding UG")> 
 <Assembly: AssemblyTrademark("Odisee")> 
 
 <Assembly: ComVisible(True)> 
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' übernehmen, indem Sie "*" eingeben:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("2.2.3.20")> 
-<Assembly: AssemblyFileVersion("2.2.3.20")> 
+<Assembly: AssemblyVersion("2.3.3.0")> 
+<Assembly: AssemblyFileVersion("2.3.3.0")> 
